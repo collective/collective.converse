@@ -11,7 +11,7 @@
         appId="collective.converse"
         category="Plone"
         condition_expr=""
-        icon_expr="string:${portal_url}/++plone++collective.converse/icon-xmpp.png"
+        icon_expr="string:${portal_url}/++plone++collective.converse/images/icon-xmpp.png"
         url_expr="string:${portal_url}/@@xmpp-settings"
         visible="True"
         i18n:attributes="title">

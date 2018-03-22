@@ -67316,5 +67316,5 @@ require(['converse'], function (converse) {
     });
 });
 
-define("/home/jc/collective.xmpp.buildout/src/collective.xmpp.chat/src/collective/xmpp/chat/browser/javascript/init.js", function(){});
+define("/home/jc/collective.converse/src/collective/converse/browser/static/init.js", function(){});
 
