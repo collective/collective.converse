@@ -20,7 +20,7 @@ require(['converse'], function (converse) {
         'debug': chatdata.getAttribute('debug') === "True",
         'hide_muc_server': true,
         'i18n': chatdata.getAttribute('lang')||'en',
-        'locales_url': '++plone++collective.xmpp.chat/locale/{{{locale}}}/LC_MESSAGES/converse.json',
+        'locales_url': '++plone++collective.converse/locale/{{{locale}}}/LC_MESSAGES/converse.json',
         'xhr_user_search': true
     });
 });

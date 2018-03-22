@@ -38,4 +38,3 @@ class XMPPSettingsControlPanel(controlpanel.ControlPanelFormWrapper):
     """ XMPP settings control panel.
     """
     form = XMPPSettingsEditForm
-    index = ViewPageTemplateFile('templates/xmppsettings.pt')
