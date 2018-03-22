@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+export LUA_PATH="${parts.buildout['parts-directory']}/luarocks/share/lua/5.1/?.lua;${parts.buildout['parts-directory']}/luarocks/share/lua/5.1/?/init.lua"
+export LUA_CPATH="${parts.buildout['parts-directory']}/luarocks/lib/lua/5.1/?.so"
+exec lua -e "require('mobdebug').listen()"

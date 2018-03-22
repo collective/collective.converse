@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+export LUA_PATH="${parts.buildout['parts-directory']}/luarocks/share/lua/5.1/?.lua;${parts.buildout['parts-directory']}/luarocks/share/lua/5.1/?/init.lua"
+export LUA_CPATH="${parts.buildout['parts-directory']}/luarocks/lib/lua/5.1/?.so"
+exec -a "$0" ${parts.directories.prosody}/bin/prosodyctl "$@" --config "${parts.directories.prosody}/etc/prosody/prosody.cfg.lua"
