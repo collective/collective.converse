@@ -1,0 +1,10 @@
+<div id="collective-xmpp-chat-data" 
+    tal:condition="not: context/portal_membership/isAnonymousUser"
+    tal:attributes="
+        auto_subscribe view/auto_subscribe;
+        bosh_url view/bosh_url;
+        credentials_url view/credentials_url;
+        debug view/debug;
+        jid view/jid;
+        navigation_root_url view/navigation_root_url;
+        lang view/lang"></div>

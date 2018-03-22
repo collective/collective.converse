@@ -1,0 +1,48 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="collective.converse">
+
+    <plone:static
+        directory="static"
+        type="plone"
+        name="collective.converse"
+        />
+
+    <browser:view
+        for="*"
+        name="xmpp-credentials"
+        class=".userinfo.XMPPCredentials"
+        layer=".interfaces.ICollectiveConverseLayer"
+        permission="zope2.View"
+        />
+
+    <browser:page
+        for="*"
+        name="search-users"
+        class=".userinfo.SearchUsers"
+        layer=".interfaces.ICollectiveConverseLayer"
+        permission="zope2.View"
+        />
+
+    <browser:page
+        for="*"
+        name="xmpp-userDetails"
+        class=".userinfo.XMPPUserDetails"
+        template="user_details.pt"
+        layer=".interfaces.ICollectiveConverseLayer"
+        permission="zope2.View"
+        />
+
+    <browser:viewlet
+        name="collective.converse.onlineusers"
+        manager="plone.app.layout.viewlets.interfaces.IPortalFooter"
+        class=".viewlet.ChatData"
+        permission="zope2.View"
+        template="./templates/chatpanel.pt"
+        layer=".interfaces.ICollectiveConverseLayer"
+        />
+
+</configure>

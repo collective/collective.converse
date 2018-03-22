@@ -1,0 +1,5 @@
+<layers>
+    <layer
+        name="collective.converse"
+        interface="collective.converse.browser.interfaces.ICollectiveConverseLayer"/>
+</layers>
