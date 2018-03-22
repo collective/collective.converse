@@ -11,33 +11,24 @@
         name="collective.converse"
         />
 
-    <browser:view
+    <browser:page
         for="*"
         name="xmpp-credentials"
-        class=".userinfo.XMPPCredentials"
+        class=".auth.XMPPCredentials"
         layer=".interfaces.ICollectiveConverseLayer"
         permission="zope2.View"
         />
 
+    <!-- Control panel -->
     <browser:page
-        for="*"
-        name="search-users"
-        class=".userinfo.SearchUsers"
-        layer=".interfaces.ICollectiveConverseLayer"
-        permission="zope2.View"
-        />
-
-    <browser:page
-        for="*"
-        name="xmpp-userDetails"
-        class=".userinfo.XMPPUserDetails"
-        template="user_details.pt"
-        layer=".interfaces.ICollectiveConverseLayer"
-        permission="zope2.View"
+        name="xmpp-settings"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        class=".controlpanel.XMPPSettingsControlPanel"
+        permission="cmf.ManagePortal"
         />
 
     <browser:viewlet
-        name="collective.converse.onlineusers"
+        name="collective.converse.configuration"
         manager="plone.app.layout.viewlets.interfaces.IPortalFooter"
         class=".viewlet.ChatData"
         permission="zope2.View"

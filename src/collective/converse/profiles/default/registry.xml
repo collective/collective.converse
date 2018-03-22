@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <registry>
+  <records interface="collective.converse.browser.controlpanel.IXMPPSettings" />
+    
   <records prefix="plone.resources/converse"
          interface='Products.CMFPlone.interfaces.IResourceRegistry'>
     <value key="js">++plone++collective.converse/converse.js</value>

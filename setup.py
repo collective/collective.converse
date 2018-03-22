@@ -25,7 +25,7 @@ setup(
     namespace_packages=['collective'],
     include_package_data=True,
     zip_safe=False,
-    install_requires=['pyotp'],
+    install_requires=['BeautifulSoup', 'pyotp', 'Plone'],
     entry_points="""
     [z3c.autoinclude.plugin]
     target = plone

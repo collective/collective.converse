@@ -1,9 +1,6 @@
 from Products.Five import BrowserView
-from collective.xmpp.core.browser import userinfo
-from Products.CMFPlone.controlpanel.browser.usergroups_usersoverview import \
-    UsersOverviewControlPanel
 from datetime import datetime
-import collective.xmpp.chat
+import collective.converse
 import base64
 import hashlib
 import hmac
@@ -30,8 +27,8 @@ class XMPPCredentials(BrowserView):
 
         otp_service = pyotp.TOTP(
             otp_seed,
-            digits=collective.xmpp.chat.OTP_DIGITS,
-            interval=collective.xmpp.chat.OTP_INTERVAL
+            digits=collective.converse.OTP_DIGITS,
+            interval=collective.converse.OTP_INTERVAL
         )
         otp = otp_service.generate_otp(
             otp_service.timecode(datetime.utcnow())
@@ -48,23 +45,3 @@ class XMPPCredentials(BrowserView):
     def get_jid(self):
         user = plone.api.user.get_current()
         return u"{}@{}".format(user.id, 'mind')
-
-
-class XMPPUserDetails(userinfo.XMPPUserDetails):
-
-    def isSelf(self):
-        return self.user_id == self.pm.getAuthenticatedMember().getId()
-
-
-class SearchUsers(BrowserView):
-
-    def __call__(self):
-        searchtext = self.request.form.get('q')
-        # search terms of less then 3 chars return empty list
-        if len(searchtext) < 2:
-            return []
-        panel = UsersOverviewControlPanel(self.context, self.request)
-        return json.dumps([{
-            'fullname': u['fullname'],
-            'id': u['id']
-            } for u in panel.doSearch(searchtext)])

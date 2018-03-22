@@ -6,7 +6,6 @@
     i18n_domain="collective.converse">
 
     <i18n:registerTranslations directory="locales"/>
-    <five:registerPackage package="." initialize=".initialize" />
     <includeDependencies package="." />
     <include package=".browser"/>
 
