@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<registry>
+    <records interface="collective.converse.browser.controlpanel.IXMPPSettings"
+        remove="True"/>
+        
+    <records prefix="plone.resources/converse"
+        interface="Products.CMFPlone.interfaces.IResourceRegistry"
+        remove="True"/>
+
+    <records prefix="plone.resources/converse-init"
+        interface="Products.CMFPlone.interfaces.IResourceRegistry"
+        remove="True"/>
+
+    <records prefix="plone.bundles/converse"
+        interface="Products.CMFPlone.interfaces.IBundleRegistry"
+        remove="True"/>
+</registry>

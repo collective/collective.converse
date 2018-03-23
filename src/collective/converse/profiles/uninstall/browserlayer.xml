@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<layers>
+    <layer name="collective.converse"
+        interface="collective.converse.browser.interfaces.ICollectiveConverseLayer"
+        remove="True" />
+</layers>

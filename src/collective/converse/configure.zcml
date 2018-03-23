@@ -17,6 +17,14 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
+	<genericsetup:registerProfile
+		name="uninstall"
+		title="Uninstall collective.converse"
+		directory="profiles/uninstall"
+		description="Remove browser layer, registry settings and resources."
+		provides="Products.GenericSetup.interfaces.EXTENSION"
+		/>
+
     <subscriber for="Products.GenericSetup.interfaces.IProfileImportedEvent"
         handler=".dbconfig.dbconfig"/>
 
