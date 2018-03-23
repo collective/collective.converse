@@ -15,6 +15,7 @@
 
   <records prefix="plone.bundles/converse"
          interface='Products.CMFPlone.interfaces.IBundleRegistry'>
+    <value key="merge_with">logged-in</value>
     <value key="resources">
       <element>converse-init</element>
     </value>

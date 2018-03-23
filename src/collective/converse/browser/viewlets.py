@@ -1,8 +1,8 @@
 from zope import component
 from plone.registry.interfaces import IRegistry
+from Products.CMFCore.utils import getToolByName
 from plone.app.layout.navigation.root import getNavigationRoot
 from plone.app.layout.viewlets.common import ViewletBase
-from Products.CMFCore.utils import getToolByName
 from collective.converse.interfaces import IXMPPSettings
 
 
@@ -20,8 +20,7 @@ class InitializationViewlet(ViewletBase):
 
         root = getNavigationRoot(self.context)
         username = member.getId()
-        # TODO: Fix hardcoding
-        self.jid = u"{}@{}".format(username, 'mind')
+        self.jid = u"{}@{}".format(username, settings.xmpp_domain)
         self.auto_subscribe = settings.auto_subscribe
         self.bosh_url = settings.bosh_url
         self.debug = settings.auto_subscribe

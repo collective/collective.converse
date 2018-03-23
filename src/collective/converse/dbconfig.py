@@ -22,7 +22,6 @@ via Plone itself.
 from App.config import getConfiguration
 from Products.CMFCore.utils import getToolByName
 from collective.converse.interfaces import IXMPPSettings
-from collective.converse.interfaces import IXMPPSecrets
 from Products.GenericSetup.interfaces import IProfileImportedEvent
 from zope.app.publication.zopepublication import ZopePublication
 from zope.component import getUtility
@@ -110,10 +109,4 @@ def dbconfig(event):
         settings.bosh_url = unicode(conf.get('bosh_url'))
     if conf.get('debug') is not None:
         settings.debug = bool(int(conf.get('debug')))
-
-    secrets = IXMPPSecrets(instance)
-    if conf.get('otp_seed') is not None:
-        secrets.otp_seed = unicode(conf.get('otp_seed'))
-    if conf.get('token_secret') is not None:
-        secrets.token_secret = unicode(conf.get('token_secret'))
     transaction.commit()

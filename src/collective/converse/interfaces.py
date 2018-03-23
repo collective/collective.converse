@@ -1,16 +1,6 @@
 from collective.converse import messageFactory as _
 from zope import schema
 from zope.interface import Interface
-from zope.interface import Attribute
-
-
-class IXMPPSecrets(Interface):
-    totp_seed = Attribute(
-        'totp_seed',
-        'The seed value for generating time-based one-time-pin values')
-
-    token_secret = Attribute(
-        'token_secret', 'The shared secret for token generation')
 
 
 class IXMPPSettings(Interface):

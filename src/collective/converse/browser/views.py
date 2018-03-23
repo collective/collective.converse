@@ -1,4 +1,6 @@
 from datetime import datetime
+from App.config import getConfiguration
+from zExceptions.unauthorized import Unauthorized
 from Products.Five import BrowserView
 from Products.CMFPlone.controlpanel.browser.usergroups_usersoverview \
     import UsersOverviewControlPanel
@@ -31,18 +33,18 @@ class SearchUsers(BrowserView):
 class XMPPCredentials(BrowserView):
 
     def __call__(self):
+        self.jid = self.get_jid()
         return json.dumps({
-            'jid': self.get_jid(),
+            'jid': self.jid,
             'password': self.get_token()
         })
 
     def get_token(self):
-        # FIXME: these should be read from secrets.cfg
-        otp_seed = 'XVGR73KMZH2M4XMY'
-        token_secret = 'JYXEX4IQOEYFYQ2S3MC5P4ZT4SDHYEA7'
+        configuration = getConfiguration()
+        conf = configuration.product_config.get('collective.converse')
 
         otp_service = pyotp.TOTP(
-            otp_seed,
+            conf.get('otp_seed'),
             digits=collective.converse.OTP_DIGITS,
             interval=collective.converse.OTP_INTERVAL
         )
@@ -50,14 +52,21 @@ class XMPPCredentials(BrowserView):
             otp_service.timecode(datetime.utcnow())
         )
         nonce = ''.join([str(random.randint(0, 9)) for i in range(32)])
-        string_to_sign = otp + nonce + self.get_jid()
+        string_to_sign = otp + nonce + self.jid
         signature = hmac.new(
-            token_secret,
+            conf.get('token_secret'),
             string_to_sign,
             hashlib.sha256
         ).digest()
         return u"{} {}".format(otp+nonce, base64.b64encode(signature))
 
     def get_jid(self):
+        portal_membership = plone.api.portal.get_tool('portal_membership')
+        if portal_membership.isAnonymousUser():
+            raise Unauthorized()
+
         user = plone.api.user.get_current()
-        return u"{}@{}".format(user.id, 'mind')
+        domain = plone.api.portal.get_registry_record(
+            'collective.converse.interfaces.IXMPPSettings.xmpp_domain'
+        )
+        return u"{}@{}".format(user.id, domain)
