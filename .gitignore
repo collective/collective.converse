@@ -3,3 +3,14 @@ secrets.cfg
 *.egg-info
 src/prosody-modules
 src/prosody
+bin
+include
+node_modules
+develop-eggs
+lib
+parts
+var
+.mr.developer.cfg
+.installed.cfg
+pip-selfcheck.json
+temp_resources
