@@ -34,7 +34,7 @@ module.exports = function(grunt) {
             "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/upload/less", 
             "/home/jc/.buildout/eggs/plone.app.event-3.1-py2.7.egg/plone/app/event/browser/resources", 
             "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources", 
-            "/home/jc/collective.converse/src/collective/converse/browser/static"
+            "/home/jc/collective.converse/src/collective/converse/browser/static/css"
 ],
         modifyVars = {
             "barcelonetaPath": "'/home/jc/.buildout/eggs/plonetheme.barceloneta-1.8-py2.7.egg/plonetheme/barceloneta/theme'", 
@@ -225,9 +225,9 @@ module.exports = function(grunt) {
                     baseUrl: "/",
                     exclude: ["jquery"],
                     generateSourceMaps: false,
-                    name: "/home/jc/collective.converse/src/collective/converse/browser/static/init.js",
+                    name: "/home/jc/collective.converse/src/collective/converse/browser/static/js/init.js",
                     optimize: "none",
-                    out: "/home/jc/collective.converse/src/collective/converse/browser/static/converse-init-compiled.js",
+                    out: "/home/jc/collective.converse/src/collective/converse/browser/static/js/converse-init-compiled.js",
                     paths: {
                       "JSXTransformer": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/react/JSXTransformer", 
                       "ace": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/ace-builds/src/ace", 
@@ -242,14 +242,14 @@ module.exports = function(grunt) {
                       "bootstrap-dropdown": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/js/dropdown", 
                       "bootstrap-tooltip": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/js/tooltip", 
                       "bootstrap-transition": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/js/transition", 
-                      "converse": "/home/jc/collective.converse/src/collective/converse/browser/static/converse", 
-                      "converse-init": "/home/jc/collective.converse/src/collective/converse/browser/static/init", 
+                      "converse": "/home/jc/collective.converse/src/collective/converse/browser/static/js/converse", 
+                      "converse-init": "/home/jc/collective.converse/src/collective/converse/browser/static/js/init", 
                       "dropzone": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/dropzone/dist/dropzone-amd-module", 
                       "expect": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/expect/index", 
                       "jqtree": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jqtree/tree.jquery", 
                       "jqtree-contextmenu": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/cs-jqtree-contextmenu/src/jqTreeContextMenu", 
                       "jquery": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery/dist/jquery.min", 
-                      "jquery-highlightsearchterms": "temp_resources/1552a3a01598413db5c59fa80500e1da", 
+                      "jquery-highlightsearchterms": "temp_resources/236879a1c5bd43f08fdfe72f5daa5c44", 
                       "jquery.browser": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.browser/dist/jquery.browser", 
                       "jquery.cookie": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.cookie/jquery.cookie", 
                       "jquery.event.drag": "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/lib/jquery.event.drag", 
@@ -403,14 +403,14 @@ module.exports = function(grunt) {
                       "bootstrap-dropdown": "empty:", 
                       "bootstrap-tooltip": "empty:", 
                       "bootstrap-transition": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/js/transition", 
-                      "converse": "/home/jc/collective.converse/src/collective/converse/browser/static/converse", 
-                      "converse-init": "/home/jc/collective.converse/src/collective/converse/browser/static/init", 
+                      "converse": "/home/jc/collective.converse/src/collective/converse/browser/static/js/converse", 
+                      "converse-init": "/home/jc/collective.converse/src/collective/converse/browser/static/js/init", 
                       "dropzone": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/dropzone/dist/dropzone-amd-module", 
                       "expect": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/expect/index", 
                       "jqtree": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jqtree/tree.jquery", 
                       "jqtree-contextmenu": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/cs-jqtree-contextmenu/src/jqTreeContextMenu", 
                       "jquery": "empty:", 
-                      "jquery-highlightsearchterms": "temp_resources/1552a3a01598413db5c59fa80500e1da", 
+                      "jquery-highlightsearchterms": "temp_resources/236879a1c5bd43f08fdfe72f5daa5c44", 
                       "jquery.browser": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.browser/dist/jquery.browser", 
                       "jquery.cookie": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.cookie/jquery.cookie", 
                       "jquery.event.drag": "empty:", 
@@ -564,14 +564,14 @@ module.exports = function(grunt) {
                       "bootstrap-dropdown": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/js/dropdown", 
                       "bootstrap-tooltip": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/js/tooltip", 
                       "bootstrap-transition": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/js/transition", 
-                      "converse": "/home/jc/collective.converse/src/collective/converse/browser/static/converse", 
-                      "converse-init": "/home/jc/collective.converse/src/collective/converse/browser/static/init", 
+                      "converse": "/home/jc/collective.converse/src/collective/converse/browser/static/js/converse", 
+                      "converse-init": "/home/jc/collective.converse/src/collective/converse/browser/static/js/init", 
                       "dropzone": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/dropzone/dist/dropzone-amd-module", 
                       "expect": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/expect/index", 
                       "jqtree": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jqtree/tree.jquery", 
                       "jqtree-contextmenu": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/cs-jqtree-contextmenu/src/jqTreeContextMenu", 
                       "jquery": "empty:", 
-                      "jquery-highlightsearchterms": "temp_resources/1552a3a01598413db5c59fa80500e1da", 
+                      "jquery-highlightsearchterms": "temp_resources/236879a1c5bd43f08fdfe72f5daa5c44", 
                       "jquery.browser": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.browser/dist/jquery.browser", 
                       "jquery.cookie": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.cookie/jquery.cookie", 
                       "jquery.event.drag": "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/lib/jquery.event.drag", 
@@ -725,14 +725,14 @@ module.exports = function(grunt) {
                       "bootstrap-dropdown": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/js/dropdown", 
                       "bootstrap-tooltip": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/js/tooltip", 
                       "bootstrap-transition": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/js/transition", 
-                      "converse": "/home/jc/collective.converse/src/collective/converse/browser/static/converse", 
-                      "converse-init": "/home/jc/collective.converse/src/collective/converse/browser/static/init", 
+                      "converse": "/home/jc/collective.converse/src/collective/converse/browser/static/js/converse", 
+                      "converse-init": "/home/jc/collective.converse/src/collective/converse/browser/static/js/init", 
                       "dropzone": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/dropzone/dist/dropzone-amd-module", 
                       "expect": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/expect/index", 
                       "jqtree": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jqtree/tree.jquery", 
                       "jqtree-contextmenu": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/cs-jqtree-contextmenu/src/jqTreeContextMenu", 
                       "jquery": "empty:", 
-                      "jquery-highlightsearchterms": "temp_resources/1552a3a01598413db5c59fa80500e1da", 
+                      "jquery-highlightsearchterms": "temp_resources/236879a1c5bd43f08fdfe72f5daa5c44", 
                       "jquery.browser": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.browser/dist/jquery.browser", 
                       "jquery.cookie": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.cookie/jquery.cookie", 
                       "jquery.event.drag": "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/lib/jquery.event.drag", 
@@ -886,14 +886,14 @@ module.exports = function(grunt) {
                       "bootstrap-dropdown": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/js/dropdown", 
                       "bootstrap-tooltip": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/js/tooltip", 
                       "bootstrap-transition": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/js/transition", 
-                      "converse": "/home/jc/collective.converse/src/collective/converse/browser/static/converse", 
-                      "converse-init": "/home/jc/collective.converse/src/collective/converse/browser/static/init", 
+                      "converse": "/home/jc/collective.converse/src/collective/converse/browser/static/js/converse", 
+                      "converse-init": "/home/jc/collective.converse/src/collective/converse/browser/static/js/init", 
                       "dropzone": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/dropzone/dist/dropzone-amd-module", 
                       "expect": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/expect/index", 
                       "jqtree": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jqtree/tree.jquery", 
                       "jqtree-contextmenu": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/cs-jqtree-contextmenu/src/jqTreeContextMenu", 
                       "jquery": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery/dist/jquery.min", 
-                      "jquery-highlightsearchterms": "temp_resources/1552a3a01598413db5c59fa80500e1da", 
+                      "jquery-highlightsearchterms": "temp_resources/236879a1c5bd43f08fdfe72f5daa5c44", 
                       "jquery.browser": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.browser/dist/jquery.browser", 
                       "jquery.cookie": "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.cookie/jquery.cookie", 
                       "jquery.event.drag": "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/lib/jquery.event.drag", 
@@ -1036,8 +1036,8 @@ module.exports = function(grunt) {
 
             sed1: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
-              pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/autotoc",
-              replacement: "../++resource++mockup/autotoc",
+              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/select2",
+              replacement: "../++plone++static/components/select2",
             },
 
             sed2: {
@@ -1066,104 +1066,104 @@ module.exports = function(grunt) {
 
             sed6: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
-              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/select2",
-              replacement: "../++plone++static/components/select2",
-            },
-
-            sed7: {
-              path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.recurrenceinput.js/src",
               replacement: "../++plone++static/components/jquery.recurrenceinput.js/src",
             },
 
-            sed8: {
+            sed7: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/tinymce-builded/js/tinymce/skins/lightgray",
               replacement: "../++plone++static/components/tinymce-builded/js/tinymce/skins/lightgray",
             },
 
-            sed9: {
+            sed8: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/dropzone/dist",
               replacement: "../++plone++static/components/dropzone/dist",
             },
 
-            sed10: {
+            sed9: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/resourceregistry",
               replacement: "../++resource++mockup/resourceregistry",
             },
 
-            sed11: {
+            sed10: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/modal",
               replacement: "../++resource++mockup/modal",
             },
 
-            sed12: {
+            sed11: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
-              pattern: "src/collective/converse/browser/static",
-              replacement: "../++plone++collective.converse",
+              pattern: "src/collective/converse/browser/static/css",
+              replacement: "../++plone++collective.converse/css",
             },
 
-            sed13: {
+            sed12: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/markspeciallinks",
               replacement: "../++resource++mockup/markspeciallinks",
             },
 
-            sed14: {
+            sed13: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/querystring",
               replacement: "../++resource++mockup/querystring",
             },
 
-            sed15: {
+            sed14: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
-              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/less",
-              replacement: "../++plone++static/components/bootstrap/less",
+              pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/autotoc",
+              replacement: "../++resource++mockup/autotoc",
             },
 
-            sed16: {
+            sed15: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/pickadate/lib/themes",
               replacement: "../++plone++static/components/pickadate/lib/themes",
             },
 
-            sed17: {
+            sed16: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/tree",
               replacement: "../++resource++mockup/tree",
             },
 
-            sed18: {
+            sed17: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/less",
               replacement: "../++resource++mockupless",
             },
 
-            sed19: {
+            sed18: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/select2",
               replacement: "../++resource++mockup/select2",
             },
 
-            sed20: {
+            sed19: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/tinymce/less",
               replacement: "../++resource++mockup/tinymce/less",
             },
 
-            sed21: {
+            sed20: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources",
               replacement: "../++resource++plone.app.theming",
             },
 
-            sed22: {
+            sed21: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.recurrenceinput.js/lib",
               replacement: "../++plone++static/components/jquery.recurrenceinput.js/lib",
+            },
+
+            sed22: {
+              path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in-compiled.css",
+              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/less",
+              replacement: "../++plone++static/components/bootstrap/less",
             },
 
             sed23: {
@@ -1234,8 +1234,8 @@ module.exports = function(grunt) {
 
             sed34: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
-              pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/autotoc",
-              replacement: "../++resource++mockup/autotoc",
+              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/select2",
+              replacement: "../++plone++static/components/select2",
             },
 
             sed35: {
@@ -1264,104 +1264,104 @@ module.exports = function(grunt) {
 
             sed39: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
-              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/select2",
-              replacement: "../++plone++static/components/select2",
-            },
-
-            sed40: {
-              path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.recurrenceinput.js/src",
               replacement: "../++plone++static/components/jquery.recurrenceinput.js/src",
             },
 
-            sed41: {
+            sed40: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/tinymce-builded/js/tinymce/skins/lightgray",
               replacement: "../++plone++static/components/tinymce-builded/js/tinymce/skins/lightgray",
             },
 
-            sed42: {
+            sed41: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/dropzone/dist",
               replacement: "../++plone++static/components/dropzone/dist",
             },
 
-            sed43: {
+            sed42: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/resourceregistry",
               replacement: "../++resource++mockup/resourceregistry",
             },
 
-            sed44: {
+            sed43: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/modal",
               replacement: "../++resource++mockup/modal",
             },
 
-            sed45: {
+            sed44: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
-              pattern: "src/collective/converse/browser/static",
-              replacement: "../++plone++collective.converse",
+              pattern: "src/collective/converse/browser/static/css",
+              replacement: "../++plone++collective.converse/css",
             },
 
-            sed46: {
+            sed45: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/markspeciallinks",
               replacement: "../++resource++mockup/markspeciallinks",
             },
 
-            sed47: {
+            sed46: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/querystring",
               replacement: "../++resource++mockup/querystring",
             },
 
-            sed48: {
+            sed47: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
-              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/less",
-              replacement: "../++plone++static/components/bootstrap/less",
+              pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/autotoc",
+              replacement: "../++resource++mockup/autotoc",
             },
 
-            sed49: {
+            sed48: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/pickadate/lib/themes",
               replacement: "../++plone++static/components/pickadate/lib/themes",
             },
 
-            sed50: {
+            sed49: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/tree",
               replacement: "../++resource++mockup/tree",
             },
 
-            sed51: {
+            sed50: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/less",
               replacement: "../++resource++mockupless",
             },
 
-            sed52: {
+            sed51: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/select2",
               replacement: "../++resource++mockup/select2",
             },
 
-            sed53: {
+            sed52: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/tinymce/less",
               replacement: "../++resource++mockup/tinymce/less",
             },
 
-            sed54: {
+            sed53: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources",
               replacement: "../++resource++plone.app.theming",
             },
 
-            sed55: {
+            sed54: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.recurrenceinput.js/lib",
               replacement: "../++plone++static/components/jquery.recurrenceinput.js/lib",
+            },
+
+            sed55: {
+              path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-compiled.css",
+              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/less",
+              replacement: "../++plone++static/components/bootstrap/less",
             },
 
             sed56: {
@@ -1432,8 +1432,8 @@ module.exports = function(grunt) {
 
             sed67: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
-              pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/autotoc",
-              replacement: "../++resource++mockup/autotoc",
+              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/select2",
+              replacement: "../++plone++static/components/select2",
             },
 
             sed68: {
@@ -1462,104 +1462,104 @@ module.exports = function(grunt) {
 
             sed72: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
-              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/select2",
-              replacement: "../++plone++static/components/select2",
-            },
-
-            sed73: {
-              path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.recurrenceinput.js/src",
               replacement: "../++plone++static/components/jquery.recurrenceinput.js/src",
             },
 
-            sed74: {
+            sed73: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/tinymce-builded/js/tinymce/skins/lightgray",
               replacement: "../++plone++static/components/tinymce-builded/js/tinymce/skins/lightgray",
             },
 
-            sed75: {
+            sed74: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/dropzone/dist",
               replacement: "../++plone++static/components/dropzone/dist",
             },
 
-            sed76: {
+            sed75: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/resourceregistry",
               replacement: "../++resource++mockup/resourceregistry",
             },
 
-            sed77: {
+            sed76: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/modal",
               replacement: "../++resource++mockup/modal",
             },
 
-            sed78: {
+            sed77: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
-              pattern: "src/collective/converse/browser/static",
-              replacement: "../++plone++collective.converse",
+              pattern: "src/collective/converse/browser/static/css",
+              replacement: "../++plone++collective.converse/css",
             },
 
-            sed79: {
+            sed78: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/markspeciallinks",
               replacement: "../++resource++mockup/markspeciallinks",
             },
 
-            sed80: {
+            sed79: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/querystring",
               replacement: "../++resource++mockup/querystring",
             },
 
-            sed81: {
+            sed80: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
-              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/less",
-              replacement: "../++plone++static/components/bootstrap/less",
+              pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/autotoc",
+              replacement: "../++resource++mockup/autotoc",
             },
 
-            sed82: {
+            sed81: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/pickadate/lib/themes",
               replacement: "../++plone++static/components/pickadate/lib/themes",
             },
 
-            sed83: {
+            sed82: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/tree",
               replacement: "../++resource++mockup/tree",
             },
 
-            sed84: {
+            sed83: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/less",
               replacement: "../++resource++mockupless",
             },
 
-            sed85: {
+            sed84: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/select2",
               replacement: "../++resource++mockup/select2",
             },
 
-            sed86: {
+            sed85: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/tinymce/less",
               replacement: "../++resource++mockup/tinymce/less",
             },
 
-            sed87: {
+            sed86: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources",
               replacement: "../++resource++plone.app.theming",
             },
 
-            sed88: {
+            sed87: {
               path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.recurrenceinput.js/lib",
               replacement: "../++plone++static/components/jquery.recurrenceinput.js/lib",
+            },
+
+            sed88: {
+              path: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry-compiled.css",
+              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/less",
+              replacement: "../++plone++static/components/bootstrap/less",
             },
 
             sed89: {
@@ -1630,8 +1630,8 @@ module.exports = function(grunt) {
 
             sed100: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
-              pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/autotoc",
-              replacement: "../++resource++mockup/autotoc",
+              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/select2",
+              replacement: "../++plone++static/components/select2",
             },
 
             sed101: {
@@ -1660,104 +1660,104 @@ module.exports = function(grunt) {
 
             sed105: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
-              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/select2",
-              replacement: "../++plone++static/components/select2",
-            },
-
-            sed106: {
-              path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.recurrenceinput.js/src",
               replacement: "../++plone++static/components/jquery.recurrenceinput.js/src",
             },
 
-            sed107: {
+            sed106: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/tinymce-builded/js/tinymce/skins/lightgray",
               replacement: "../++plone++static/components/tinymce-builded/js/tinymce/skins/lightgray",
             },
 
-            sed108: {
+            sed107: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/dropzone/dist",
               replacement: "../++plone++static/components/dropzone/dist",
             },
 
-            sed109: {
+            sed108: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/resourceregistry",
               replacement: "../++resource++mockup/resourceregistry",
             },
 
-            sed110: {
+            sed109: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/modal",
               replacement: "../++resource++mockup/modal",
             },
 
-            sed111: {
+            sed110: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
-              pattern: "src/collective/converse/browser/static",
-              replacement: "../++plone++collective.converse",
+              pattern: "src/collective/converse/browser/static/css",
+              replacement: "../++plone++collective.converse/css",
             },
 
-            sed112: {
+            sed111: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/markspeciallinks",
               replacement: "../++resource++mockup/markspeciallinks",
             },
 
-            sed113: {
+            sed112: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/querystring",
               replacement: "../++resource++mockup/querystring",
             },
 
-            sed114: {
+            sed113: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
-              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/less",
-              replacement: "../++plone++static/components/bootstrap/less",
+              pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/autotoc",
+              replacement: "../++resource++mockup/autotoc",
             },
 
-            sed115: {
+            sed114: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/pickadate/lib/themes",
               replacement: "../++plone++static/components/pickadate/lib/themes",
             },
 
-            sed116: {
+            sed115: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/tree",
               replacement: "../++resource++mockup/tree",
             },
 
-            sed117: {
+            sed116: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/less",
               replacement: "../++resource++mockupless",
             },
 
-            sed118: {
+            sed117: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/select2",
               replacement: "../++resource++mockup/select2",
             },
 
-            sed119: {
+            sed118: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/mockup-2.7.1-py2.7.egg/mockup/patterns/tinymce/less",
               replacement: "../++resource++mockup/tinymce/less",
             },
 
-            sed120: {
+            sed119: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources",
               replacement: "../++resource++plone.app.theming",
             },
 
-            sed121: {
+            sed120: {
               path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
               pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/jquery.recurrenceinput.js/lib",
               replacement: "../++plone++static/components/jquery.recurrenceinput.js/lib",
+            },
+
+            sed121: {
+              path: "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper-compiled.css",
+              pattern: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/components/bootstrap/less",
+              replacement: "../++plone++static/components/bootstrap/less",
             },
 
             sed122: {
@@ -1831,7 +1831,7 @@ module.exports = function(grunt) {
             sourceMapName: "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/converse-compiled.js.map"
           },
           files: {
-            "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/converse-compiled.js": ["/home/jc/collective.converse/src/collective/converse/browser/static/converse-init-compiled.js"]
+            "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/converse-compiled.js": ["/home/jc/collective.converse/src/collective/converse/browser/static/js/converse-init-compiled.js"]
           }
         },
 
@@ -1886,7 +1886,7 @@ module.exports = function(grunt) {
         },
         watch: {
             scripts: {
-                files: ["/home/jc/collective.converse/src/collective/converse/browser/static/init.js", "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in.js", "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in.less", "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone.js", "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone.less", "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry.js", "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry.less", "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper.js", "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper.less"],
+                files: ["/home/jc/collective.converse/src/collective/converse/browser/static/js/init.js", "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in.js", "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone-logged-in.less", "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone.js", "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/plone.less", "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry.js", "/home/jc/.buildout/eggs/Products.CMFPlone-5.1.0.1-py2.7.egg/Products/CMFPlone/static/resourceregistry.less", "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper.js", "/home/jc/.buildout/eggs/plone.app.theming-2.0.2-py2.7.egg/plone/app/theming/browser/resources/thememapper.less"],
                 tasks: ["requirejs", "less", "sed", "uglify"]
             }
         }
