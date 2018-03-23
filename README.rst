@@ -21,33 +21,56 @@ Features
 Installation
 ============
 
-First, you'll need to create a ``secrets.cfg`` file, with the following format:
-
-    [prosody.cfg.lua]
-    prosody_otp_seed = 
-    prosody_token_secret = 
-
-Then generate the secrets and insert them into that file, read the section
-`Authentication`_ below.
-
-Then run buildout:
-
-    pip install -r requirements.txt
-    ./bin/buildout
-
-Integration
-===========
-
-Prosody is installed and configured via the `prosody.cfg` buildout profile.
-Extend it in your own buildout in order to use it.
+To integrate ``collective.converse`` into your own project, you'll want to
+include ``prosody.cfg`` from this repo in your bulidout config.::
 
     [buildout]
     extends = /path/to/prosody.cfg
 
+Then you'll need to create a ``secrets.cfg`` file, with the following format:
+
+    [prosody.cfg.lua]
+    # FIXME: don't use these values, they're for demonstration purposes only,
+    # generate your own OR YOU WILL BE HACKED!
+    otp_seed = XVGR73KMZH2M4XMY
+    token_secret = JYXEX4IQOEYFYQ2S3MC5P4ZT4SDHYEA7
+
+    [instance]
+    zope-conf-additional +=
+        <product-config collective.converse>
+            instance_name Plone
+            xmpp_domain example.org
+            auto_subscribe 1
+            bosh_url http://example.org:5280/http-bind
+            otp_seed XVGR73KMZH2M4XMY
+            token_secret JYXEX4IQOEYFYQ2S3MC5P4ZT4SDHYEA7
+            debug 0
+        </product-config>
+
+Don't use the secrets values in the example above, generate your own.
+Read the section `Authentication`_ below to see how to do that.
+
+The ``zope-conf-additional`` additional section above lets you configure your
+XMPP settings via buildout. In the very least you'll need to provide the
+``otp_seed`` and ``token_secret`` values because they can't be configured from
+within Plone itself (for security reasons).
+
+However the other values can be configured at the  ``${plone}/@@xmpp-settings``
+URL once you've installed collective.converse.
+
+To find out what the configuration settings are for, go read their descriptions
+at ``${plone}/@@xmpp-settings``.
+
+Be aware that the values in ``secrets.cfg`` will override any manually
+configured settings whenever you restart Plone. If you want to avoid that, then
+don't put those value in ``secrets.cfg``.
+
+Once you've configured secrets.cfg, you can run buildout.
+
 Authentication
 ==============
 
-Plone generates [HMAC](https://en.wikipedia.org/wiki/HMAC) tokens
+Plone generates `HMAC <https://en.wikipedia.org/wiki/HMAC>`_ tokens
 which contain time-based one-time-pin (TOTP) tokens and are hashed with SHA256.
 
 Converse.js, the JavaScript XMPP client receives this token and then passes it
