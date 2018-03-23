@@ -1,7 +1,9 @@
-from Products.Five import BrowserView
 from datetime import datetime
-import collective.converse
+from Products.Five import BrowserView
+from Products.CMFPlone.controlpanel.browser.usergroups_usersoverview \
+    import UsersOverviewControlPanel
 import base64
+import collective.converse
 import hashlib
 import hmac
 import json
@@ -10,6 +12,20 @@ import plone.api
 import pyotp
 import random
 log = logging.getLogger(__name__)
+
+
+class SearchUsers(BrowserView):
+
+    def __call__(self, *args, **kw):
+        searchtext = self.request.form.get('q')
+        # search terms of less then 3 chars return empty list
+        if len(searchtext) < 2:
+            return []
+        panel = UsersOverviewControlPanel(self.context, self.request)
+        return json.dumps([{
+            'fullname': u['fullname'],
+            'id': u['id']
+            } for u in panel.doSearch(searchtext)])
 
 
 class XMPPCredentials(BrowserView):

@@ -21,6 +21,7 @@ require(['converse'], function (converse) {
         'hide_muc_server': true,
         'i18n': chatdata.getAttribute('lang')||'en',
         'locales_url': '++plone++collective.converse/locale/{{{locale}}}/LC_MESSAGES/converse.json',
-        'xhr_user_search': true
+        'xhr_user_search': true,
+        'xhr_user_search_url': chatdata.getAttribute('xhr_user_search_url')
     });
 });

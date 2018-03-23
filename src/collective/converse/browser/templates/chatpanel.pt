@@ -6,5 +6,6 @@
         credentials_url view/credentials_url;
         debug view/debug;
         jid view/jid;
+        lang view/lang;
         navigation_root_url view/navigation_root_url;
-        lang view/lang"></div>
+        xhr_user_search_url view/xhr_user_search_url"></div>

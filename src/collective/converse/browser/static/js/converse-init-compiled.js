@@ -48664,7 +48664,7 @@ return __p
                   a.setAttribute('data-recipient', jid);
                   a.textContent = obj.fullname;
                   li.appendChild(a);
-                  u.appendChild(li);
+                  ul.appendChild(li);
                 });
               }
             } else {
@@ -67312,9 +67312,10 @@ require(['converse'], function (converse) {
         'hide_muc_server': true,
         'i18n': chatdata.getAttribute('lang')||'en',
         'locales_url': '++plone++collective.converse/locale/{{{locale}}}/LC_MESSAGES/converse.json',
-        'xhr_user_search': true
+        'xhr_user_search': true,
+        'xhr_user_search_url': chatdata.getAttribute('xhr_user_search_url')
     });
 });
 
-define("/home/jc/collective.converse/src/collective/converse/browser/static/init.js", function(){});
+define("/home/jc/collective.converse/src/collective/converse/browser/static/js/init.js", function(){});
 

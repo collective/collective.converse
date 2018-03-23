@@ -12,9 +12,17 @@
         />
 
     <browser:page
-        for="*"
+        for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
         name="xmpp-credentials"
-        class=".auth.XMPPCredentials"
+        class=".views.XMPPCredentials"
+        layer=".interfaces.ICollectiveConverseLayer"
+        permission="zope2.View"
+        />
+
+    <browser:page
+        for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+        name="search-users"
+        class=".views.SearchUsers"
         layer=".interfaces.ICollectiveConverseLayer"
         permission="zope2.View"
         />
@@ -30,7 +38,7 @@
     <browser:viewlet
         name="collective.converse.configuration"
         manager="plone.app.layout.viewlets.interfaces.IPortalFooter"
-        class=".viewlet.ChatData"
+        class=".viewlets.InitializationViewlet"
         permission="zope2.View"
         template="./templates/chatpanel.pt"
         layer=".interfaces.ICollectiveConverseLayer"
