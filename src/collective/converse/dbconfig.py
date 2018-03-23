@@ -72,7 +72,8 @@ def dbconfig(event):
                       % instance_name)
             return
 
-    if Globals.DevelopmentMode and conf.get('ignore_in_debug_mode'):
+    if Globals.DevelopmentMode and \
+            bool(int(conf.get('ignore_in_debug_mode', 0))):
         log.info('Configuration settings for collective.converse are ignored '
                  'because Zope is starting up in debug_mode')
         return
