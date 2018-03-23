@@ -1,3 +1,5 @@
 secrets.cfg
 *.pyc
 *.egg-info
+src/prosody-modules
+src/prosody
