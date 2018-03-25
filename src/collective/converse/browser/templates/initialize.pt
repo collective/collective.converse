@@ -29,8 +29,8 @@
 
             var chatdata = document.getElementById('collective-xmpp-chat-data');
             converse.initialize({
-                'allow_otr': false,
                 'allow_logout': false,
+                'allow_otr': false,
                 'allow_registration': false,
                 'auto_list_rooms': true,
                 'auto_login': 'true',

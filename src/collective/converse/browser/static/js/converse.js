@@ -46403,10 +46403,12 @@ return __p
 
         return this.__super__.logOut.apply(this, arguments);
       },
-      initStatus: function initStatus() {
+      initStatus: function initStatus(reconnecting) {
         var _converse = this.__super__._converse;
 
-        _converse.chatboxviews.closeAllChatBoxes();
+        if (!reconnecting) {
+          _converse.chatboxviews.closeAllChatBoxes();
+        }
 
         return this.__super__.initStatus.apply(this, arguments);
       }
