@@ -3,6 +3,7 @@ secrets.cfg
 *.egg-info
 src/prosody-modules
 src/prosody
+src/collective.loremipsum
 bin
 include
 node_modules

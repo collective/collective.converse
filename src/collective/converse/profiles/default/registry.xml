@@ -2,26 +2,10 @@
 <registry>
   <records interface="collective.converse.browser.controlpanel.IXMPPSettings" />
     
-  <records prefix="plone.resources/converse"
-         interface='Products.CMFPlone.interfaces.IResourceRegistry'>
-    <value key="js">++plone++collective.converse/js/converse.js</value>
-    <value key="css"><element>++plone++collective.converse/css/converse.css</element></value>
-  </records>
-
-  <records prefix="plone.resources/converse-init"
-         interface='Products.CMFPlone.interfaces.IResourceRegistry'>
-    <value key="js">++plone++collective.converse/js/init.js</value>
-  </records>
-
-  <records prefix="plone.bundles/converse"
-         interface='Products.CMFPlone.interfaces.IBundleRegistry'>
-    <value key="merge_with">logged-in</value>
-    <value key="resources">
-      <element>converse-init</element>
-    </value>
+  <records prefix="plone.bundles/converse.js" interface='Products.CMFPlone.interfaces.IBundleRegistry'>
+    <value key="compile">False</value>
     <value key="enabled">True</value>
-    <value key="jscompilation">++plone++collective.converse/js/converse-init-compiled.js</value>
-    <value key="csscompilation">++plone++collective.converse/css/converse-compiled.css</value>
-    <value key="last_compilation">2018-03-22 00:00:00</value>
+    <value key="jscompilation">++plone++collective.converse/js/converse.js</value>
+    <value key="csscompilation">++plone++collective.converse/css/converse.css</value>
   </records>
 </registry>

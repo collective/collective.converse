@@ -7,16 +7,7 @@
 
 /* jshint ignore:start */
 (function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        //Allow using this built library as an AMD module
-        //in another project. That other project will only
-        //see this AMD call, not the internal modules in
-        //the closure below.
-        define([], factory);
-    } else {
-        //Browser globals case.
-        root.converse = factory();
-    }
+    root.converse = factory();
 }(this, function () {
     //almond, and your modules will be inlined here
 /* jshint ignore:end */
@@ -50577,9 +50568,13 @@ __e(o.fullname) +
 __e(o.title_your_profile) +
 '" data-toggle="modal" data-target="#userProfileModal"></a> -->\n    <!-- <a class="chatbox-btn fa fa-cog align-self-center" title="' +
 __e(o.title_change_status) +
-'" data-toggle="modal" data-target="#settingsModal"></a> -->\n    <a class="chatbox-btn logout fa fa-sign-out align-self-center" title="' +
+'" data-toggle="modal" data-target="#settingsModal"></a> -->\n    ';
+ if (o._converse.allow_logout) { ;
+__p += '\n        <a class="chatbox-btn logout fa fa-sign-out align-self-center" title="' +
 __e(o.title_log_out) +
-'"></a>\n</div>\n<div class="d-flex xmpp-status">\n    <span class="' +
+'"></a>\n    ';
+ } ;
+__p += '\n</div>\n<div class="d-flex xmpp-status">\n    <span class="' +
 __e(o.chat_status) +
 ' w-100 align-self-center" data-value="' +
 __e(o.chat_status) +
@@ -51014,6 +51009,7 @@ return __p
             'fullname': this.model.get('fullname') || _converse.bare_jid,
             'status_message': this.model.get('status_message') || __("I am %1$s", this.getPrettyStatus(chat_status)),
             'chat_status': chat_status,
+            '_converse': _converse,
             'title_change_settings': __('Change settings'),
             'title_change_status': __('Click to change your chat status'),
             'title_log_out': __('Log out'),

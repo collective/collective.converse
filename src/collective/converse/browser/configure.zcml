@@ -40,7 +40,7 @@
         manager="plone.app.layout.viewlets.interfaces.IPortalFooter"
         class=".viewlets.InitializationViewlet"
         permission="zope2.View"
-        template="./templates/chatpanel.pt"
+        template="./templates/initialize.pt"
         layer=".interfaces.ICollectiveConverseLayer"
         />
 
