@@ -29,18 +29,21 @@
 
             var chatdata = document.getElementById('collective-xmpp-chat-data');
             converse.initialize({
-                'auto_login': 'true',
+                'allow_otr': false,
                 'allow_logout': false,
+                'allow_registration': false,
                 'auto_list_rooms': true,
+                'auto_login': 'true',
                 'auto_subscribe': chatdata.getAttribute('auto_subscribe') === "True",
                 'bosh_service_url': chatdata.getAttribute('bosh_url'),
-                'credentials_url': chatdata.getAttribute('credentials_url'),
                 'connection_options': {'mechanisms': [Strophe.SASL_HMAC]},
-                'jid': chatdata.getAttribute('jid'),
+                'credentials_url': chatdata.getAttribute('credentials_url'),
                 'debug': chatdata.getAttribute('debug') === "True",
                 'hide_muc_server': true,
                 'i18n': chatdata.getAttribute('lang')||'en',
+                'jid': chatdata.getAttribute('jid'),
                 'locales_url': '++plone++collective.converse/locale/{{{locale}}}/LC_MESSAGES/converse.json',
+                'use_vcards': false,
                 'xhr_user_search': true,
                 'xhr_user_search_url': chatdata.getAttribute('xhr_user_search_url')
             });
