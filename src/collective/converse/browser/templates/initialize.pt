@@ -16,6 +16,15 @@
         body.plone-toolbar-left-default .converse-chatboxes {
             margin-left: -60px !important;
         }
+        #conversejs .brand-heading-container {
+            display: none;
+        }
+        #conversejs .userinfo .username {
+            display: none;
+        }
+        #conversejs #converse-modals .set-xmpp-status .custom-control-label {
+            margin-top: -0.15em;
+        }
     </style>
 
     <script type="text/javascript" tal:condition="not: context/portal_membership/isAnonymousUser">
@@ -44,7 +53,6 @@
                 'jid': chatdata.getAttribute('jid'),
                 'locales_url': '++plone++collective.converse/locale/{{{locale}}}/LC_MESSAGES/converse.json',
                 'use_vcards': false,
-                'xhr_user_search': true,
                 'xhr_user_search_url': chatdata.getAttribute('xhr_user_search_url')
             });
         }

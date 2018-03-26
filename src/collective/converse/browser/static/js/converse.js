@@ -2726,7 +2726,7 @@ if ( typeof define === "function" && define.amd ) {
  * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
  * @license   Licensed under MIT license
  *            See https://raw.githubusercontent.com/stefanpenner/es6-promise/master/LICENSE
- * @version   4.1.1
+ * @version   v4.2.4+314e4831
  */
 
 (function (global, factory) {
@@ -2744,7 +2744,9 @@ function isFunction(x) {
   return typeof x === 'function';
 }
 
-var _isArray = undefined;
+
+
+var _isArray = void 0;
 if (Array.isArray) {
   _isArray = Array.isArray;
 } else {
@@ -2756,8 +2758,8 @@ if (Array.isArray) {
 var isArray = _isArray;
 
 var len = 0;
-var vertxNext = undefined;
-var customSchedulerFn = undefined;
+var vertxNext = void 0;
+var customSchedulerFn = void 0;
 
 var asap = function asap(callback, arg) {
   queue[len] = callback;
@@ -2786,7 +2788,7 @@ function setAsap(asapFn) {
 var browserWindow = typeof window !== 'undefined' ? window : undefined;
 var browserGlobal = browserWindow || {};
 var BrowserMutationObserver = browserGlobal.MutationObserver || browserGlobal.WebKitMutationObserver;
-var isNode = typeof self === 'undefined' && typeof process !== 'undefined' && ({}).toString.call(process) === '[object process]';
+var isNode = typeof self === 'undefined' && typeof process !== 'undefined' && {}.toString.call(process) === '[object process]';
 
 // test for web worker but not in IE10
 var isWorker = typeof Uint8ClampedArray !== 'undefined' && typeof importScripts !== 'undefined' && typeof MessageChannel !== 'undefined';
@@ -2857,8 +2859,7 @@ function flush() {
 
 function attemptVertx() {
   try {
-    var r = require;
-    var vertx = r('vertx');
+    var vertx = Function('return this')().require('vertx');
     vertxNext = vertx.runOnLoop || vertx.runOnContext;
     return useVertxTimer();
   } catch (e) {
@@ -2866,7 +2867,7 @@ function attemptVertx() {
   }
 }
 
-var scheduleFlush = undefined;
+var scheduleFlush = void 0;
 // Decide what async method to use to triggering processing of queued callbacks:
 if (isNode) {
   scheduleFlush = useNextTick();
@@ -2881,8 +2882,6 @@ if (isNode) {
 }
 
 function then(onFulfillment, onRejection) {
-  var _arguments = arguments;
-
   var parent = this;
 
   var child = new this.constructor(noop);
@@ -2893,13 +2892,12 @@ function then(onFulfillment, onRejection) {
 
   var _state = parent._state;
 
+
   if (_state) {
-    (function () {
-      var callback = _arguments[_state - 1];
-      asap(function () {
-        return invokeCallback(_state, child, callback, parent._result);
-      });
-    })();
+    var callback = arguments[_state - 1];
+    asap(function () {
+      return invokeCallback(_state, child, callback, parent._result);
+    });
   } else {
     subscribe(parent, child, onFulfillment, onRejection);
   }
@@ -2951,7 +2949,7 @@ function resolve$1(object) {
   return promise;
 }
 
-var PROMISE_ID = Math.random().toString(36).substring(16);
+var PROMISE_ID = Math.random().toString(36).substring(2);
 
 function noop() {}
 
@@ -2959,7 +2957,7 @@ var PENDING = void 0;
 var FULFILLED = 1;
 var REJECTED = 2;
 
-var GET_THEN_ERROR = new ErrorObject();
+var TRY_CATCH_ERROR = { error: null };
 
 function selfFulfillment() {
   return new TypeError("You cannot resolve a promise with itself");
@@ -2973,8 +2971,8 @@ function getThen(promise) {
   try {
     return promise.then;
   } catch (error) {
-    GET_THEN_ERROR.error = error;
-    return GET_THEN_ERROR;
+    TRY_CATCH_ERROR.error = error;
+    return TRY_CATCH_ERROR;
   }
 }
 
@@ -3033,9 +3031,9 @@ function handleMaybeThenable(promise, maybeThenable, then$$1) {
   if (maybeThenable.constructor === promise.constructor && then$$1 === then && maybeThenable.constructor.resolve === resolve$1) {
     handleOwnThenable(promise, maybeThenable);
   } else {
-    if (then$$1 === GET_THEN_ERROR) {
-      reject(promise, GET_THEN_ERROR.error);
-      GET_THEN_ERROR.error = null;
+    if (then$$1 === TRY_CATCH_ERROR) {
+      reject(promise, TRY_CATCH_ERROR.error);
+      TRY_CATCH_ERROR.error = null;
     } else if (then$$1 === undefined) {
       fulfill(promise, maybeThenable);
     } else if (isFunction(then$$1)) {
@@ -3091,6 +3089,7 @@ function subscribe(parent, child, onFulfillment, onRejection) {
   var _subscribers = parent._subscribers;
   var length = _subscribers.length;
 
+
   parent._onerror = null;
 
   _subscribers[length] = child;
@@ -3110,8 +3109,8 @@ function publish(promise) {
     return;
   }
 
-  var child = undefined,
-      callback = undefined,
+  var child = void 0,
+      callback = void 0,
       detail = promise._result;
 
   for (var i = 0; i < subscribers.length; i += 3) {
@@ -3128,12 +3127,6 @@ function publish(promise) {
   promise._subscribers.length = 0;
 }
 
-function ErrorObject() {
-  this.error = null;
-}
-
-var TRY_CATCH_ERROR = new ErrorObject();
-
 function tryCatch(callback, detail) {
   try {
     return callback(detail);
@@ -3145,10 +3138,10 @@ function tryCatch(callback, detail) {
 
 function invokeCallback(settled, promise, callback, detail) {
   var hasCallback = isFunction(callback),
-      value = undefined,
-      error = undefined,
-      succeeded = undefined,
-      failed = undefined;
+      value = void 0,
+      error = void 0,
+      succeeded = void 0,
+      failed = void 0;
 
   if (hasCallback) {
     value = tryCatch(callback, detail);
@@ -3173,14 +3166,14 @@ function invokeCallback(settled, promise, callback, detail) {
   if (promise._state !== PENDING) {
     // noop
   } else if (hasCallback && succeeded) {
-      resolve(promise, value);
-    } else if (failed) {
-      reject(promise, error);
-    } else if (settled === FULFILLED) {
-      fulfill(promise, value);
-    } else if (settled === REJECTED) {
-      reject(promise, value);
-    }
+    resolve(promise, value);
+  } else if (failed) {
+    reject(promise, error);
+  } else if (settled === FULFILLED) {
+    fulfill(promise, value);
+  } else if (settled === REJECTED) {
+    reject(promise, value);
+  }
 }
 
 function initializePromise(promise, resolver) {
@@ -3207,97 +3200,103 @@ function makePromise(promise) {
   promise._subscribers = [];
 }
 
-function Enumerator$1(Constructor, input) {
-  this._instanceConstructor = Constructor;
-  this.promise = new Constructor(noop);
-
-  if (!this.promise[PROMISE_ID]) {
-    makePromise(this.promise);
-  }
-
-  if (isArray(input)) {
-    this.length = input.length;
-    this._remaining = input.length;
-
-    this._result = new Array(this.length);
-
-    if (this.length === 0) {
-      fulfill(this.promise, this._result);
-    } else {
-      this.length = this.length || 0;
-      this._enumerate(input);
-      if (this._remaining === 0) {
-        fulfill(this.promise, this._result);
-      }
-    }
-  } else {
-    reject(this.promise, validationError());
-  }
-}
-
 function validationError() {
   return new Error('Array Methods must be provided an Array');
 }
 
-Enumerator$1.prototype._enumerate = function (input) {
-  for (var i = 0; this._state === PENDING && i < input.length; i++) {
-    this._eachEntry(input[i], i);
+var Enumerator = function () {
+  function Enumerator(Constructor, input) {
+    this._instanceConstructor = Constructor;
+    this.promise = new Constructor(noop);
+
+    if (!this.promise[PROMISE_ID]) {
+      makePromise(this.promise);
+    }
+
+    if (isArray(input)) {
+      this.length = input.length;
+      this._remaining = input.length;
+
+      this._result = new Array(this.length);
+
+      if (this.length === 0) {
+        fulfill(this.promise, this._result);
+      } else {
+        this.length = this.length || 0;
+        this._enumerate(input);
+        if (this._remaining === 0) {
+          fulfill(this.promise, this._result);
+        }
+      }
+    } else {
+      reject(this.promise, validationError());
+    }
   }
-};
 
-Enumerator$1.prototype._eachEntry = function (entry, i) {
-  var c = this._instanceConstructor;
-  var resolve$$1 = c.resolve;
+  Enumerator.prototype._enumerate = function _enumerate(input) {
+    for (var i = 0; this._state === PENDING && i < input.length; i++) {
+      this._eachEntry(input[i], i);
+    }
+  };
 
-  if (resolve$$1 === resolve$1) {
-    var _then = getThen(entry);
+  Enumerator.prototype._eachEntry = function _eachEntry(entry, i) {
+    var c = this._instanceConstructor;
+    var resolve$$1 = c.resolve;
 
-    if (_then === then && entry._state !== PENDING) {
-      this._settledAt(entry._state, i, entry._result);
-    } else if (typeof _then !== 'function') {
+
+    if (resolve$$1 === resolve$1) {
+      var _then = getThen(entry);
+
+      if (_then === then && entry._state !== PENDING) {
+        this._settledAt(entry._state, i, entry._result);
+      } else if (typeof _then !== 'function') {
+        this._remaining--;
+        this._result[i] = entry;
+      } else if (c === Promise$2) {
+        var promise = new c(noop);
+        handleMaybeThenable(promise, entry, _then);
+        this._willSettleAt(promise, i);
+      } else {
+        this._willSettleAt(new c(function (resolve$$1) {
+          return resolve$$1(entry);
+        }), i);
+      }
+    } else {
+      this._willSettleAt(resolve$$1(entry), i);
+    }
+  };
+
+  Enumerator.prototype._settledAt = function _settledAt(state, i, value) {
+    var promise = this.promise;
+
+
+    if (promise._state === PENDING) {
       this._remaining--;
-      this._result[i] = entry;
-    } else if (c === Promise$3) {
-      var promise = new c(noop);
-      handleMaybeThenable(promise, entry, _then);
-      this._willSettleAt(promise, i);
-    } else {
-      this._willSettleAt(new c(function (resolve$$1) {
-        return resolve$$1(entry);
-      }), i);
+
+      if (state === REJECTED) {
+        reject(promise, value);
+      } else {
+        this._result[i] = value;
+      }
     }
-  } else {
-    this._willSettleAt(resolve$$1(entry), i);
-  }
-};
 
-Enumerator$1.prototype._settledAt = function (state, i, value) {
-  var promise = this.promise;
-
-  if (promise._state === PENDING) {
-    this._remaining--;
-
-    if (state === REJECTED) {
-      reject(promise, value);
-    } else {
-      this._result[i] = value;
+    if (this._remaining === 0) {
+      fulfill(promise, this._result);
     }
-  }
+  };
 
-  if (this._remaining === 0) {
-    fulfill(promise, this._result);
-  }
-};
+  Enumerator.prototype._willSettleAt = function _willSettleAt(promise, i) {
+    var enumerator = this;
 
-Enumerator$1.prototype._willSettleAt = function (promise, i) {
-  var enumerator = this;
+    subscribe(promise, undefined, function (value) {
+      return enumerator._settledAt(FULFILLED, i, value);
+    }, function (reason) {
+      return enumerator._settledAt(REJECTED, i, reason);
+    });
+  };
 
-  subscribe(promise, undefined, function (value) {
-    return enumerator._settledAt(FULFILLED, i, value);
-  }, function (reason) {
-    return enumerator._settledAt(REJECTED, i, reason);
-  });
-};
+  return Enumerator;
+}();
 
 /**
   `Promise.all` accepts an array of promises, and returns a new promise which
@@ -3346,8 +3345,8 @@ Enumerator$1.prototype._willSettleAt = function (promise, i) {
   fulfilled, or rejected if any of them become rejected.
   @static
 */
-function all$1(entries) {
-  return new Enumerator$1(this, entries).promise;
+function all(entries) {
+  return new Enumerator(this, entries).promise;
 }
 
 /**
@@ -3415,7 +3414,7 @@ function all$1(entries) {
   @return {Promise} a promise which settles in the same way as the first passed
   promise to settle.
 */
-function race$1(entries) {
+function race(entries) {
   /*jshint validthis:true */
   var Constructor = this;
 
@@ -3582,302 +3581,325 @@ function needsNew() {
   ```
 
   @class Promise
-  @param {function} resolver
+  @param {Function} resolver
   Useful for tooling.
   @constructor
 */
-function Promise$3(resolver) {
-  this[PROMISE_ID] = nextId();
-  this._result = this._state = undefined;
-  this._subscribers = [];
 
-  if (noop !== resolver) {
-    typeof resolver !== 'function' && needsResolver();
-    this instanceof Promise$3 ? initializePromise(this, resolver) : needsNew();
+var Promise$2 = function () {
+  function Promise(resolver) {
+    this[PROMISE_ID] = nextId();
+    this._result = this._state = undefined;
+    this._subscribers = [];
+
+    if (noop !== resolver) {
+      typeof resolver !== 'function' && needsResolver();
+      this instanceof Promise ? initializePromise(this, resolver) : needsNew();
+    }
   }
-}
-
-Promise$3.all = all$1;
-Promise$3.race = race$1;
-Promise$3.resolve = resolve$1;
-Promise$3.reject = reject$1;
-Promise$3._setScheduler = setScheduler;
-Promise$3._setAsap = setAsap;
-Promise$3._asap = asap;
-
-Promise$3.prototype = {
-  constructor: Promise$3,
 
   /**
-    The primary way of interacting with a promise is through its `then` method,
-    which registers callbacks to receive either a promise's eventual value or the
-    reason why the promise cannot be fulfilled.
-  
-    ```js
-    findUser().then(function(user){
-      // user is available
-    }, function(reason){
-      // user is unavailable, and you are given the reason why
-    });
-    ```
-  
-    Chaining
-    --------
-  
-    The return value of `then` is itself a promise.  This second, 'downstream'
-    promise is resolved with the return value of the first promise's fulfillment
-    or rejection handler, or rejected if the handler throws an exception.
-  
-    ```js
-    findUser().then(function (user) {
-      return user.name;
-    }, function (reason) {
-      return 'default name';
-    }).then(function (userName) {
-      // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
-      // will be `'default name'`
-    });
-  
-    findUser().then(function (user) {
-      throw new Error('Found user, but still unhappy');
-    }, function (reason) {
-      throw new Error('`findUser` rejected and we're unhappy');
-    }).then(function (value) {
-      // never reached
-    }, function (reason) {
-      // if `findUser` fulfilled, `reason` will be 'Found user, but still unhappy'.
-      // If `findUser` rejected, `reason` will be '`findUser` rejected and we're unhappy'.
-    });
-    ```
-    If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
-  
-    ```js
-    findUser().then(function (user) {
-      throw new PedagogicalException('Upstream error');
-    }).then(function (value) {
-      // never reached
-    }).then(function (value) {
-      // never reached
-    }, function (reason) {
-      // The `PedgagocialException` is propagated all the way down to here
-    });
-    ```
-  
-    Assimilation
-    ------------
-  
-    Sometimes the value you want to propagate to a downstream promise can only be
-    retrieved asynchronously. This can be achieved by returning a promise in the
-    fulfillment or rejection handler. The downstream promise will then be pending
-    until the returned promise is settled. This is called *assimilation*.
-  
-    ```js
-    findUser().then(function (user) {
-      return findCommentsByAuthor(user);
-    }).then(function (comments) {
-      // The user's comments are now available
-    });
-    ```
-  
-    If the assimliated promise rejects, then the downstream promise will also reject.
-  
-    ```js
-    findUser().then(function (user) {
-      return findCommentsByAuthor(user);
-    }).then(function (comments) {
-      // If `findCommentsByAuthor` fulfills, we'll have the value here
-    }, function (reason) {
-      // If `findCommentsByAuthor` rejects, we'll have the reason here
-    });
-    ```
-  
-    Simple Example
-    --------------
-  
-    Synchronous Example
-  
-    ```javascript
-    let result;
-  
-    try {
-      result = findResult();
-      // success
-    } catch(reason) {
+  The primary way of interacting with a promise is through its `then` method,
+  which registers callbacks to receive either a promise's eventual value or the
+  reason why the promise cannot be fulfilled.
+   ```js
+  findUser().then(function(user){
+    // user is available
+  }, function(reason){
+    // user is unavailable, and you are given the reason why
+  });
+  ```
+   Chaining
+  --------
+   The return value of `then` is itself a promise.  This second, 'downstream'
+  promise is resolved with the return value of the first promise's fulfillment
+  or rejection handler, or rejected if the handler throws an exception.
+   ```js
+  findUser().then(function (user) {
+    return user.name;
+  }, function (reason) {
+    return 'default name';
+  }).then(function (userName) {
+    // If `findUser` fulfilled, `userName` will be the user's name, otherwise it
+    // will be `'default name'`
+  });
+   findUser().then(function (user) {
+    throw new Error('Found user, but still unhappy');
+  }, function (reason) {
+    throw new Error('`findUser` rejected and we're unhappy');
+  }).then(function (value) {
+    // never reached
+  }, function (reason) {
+    // if `findUser` fulfilled, `reason` will be 'Found user, but still unhappy'.
+    // If `findUser` rejected, `reason` will be '`findUser` rejected and we're unhappy'.
+  });
+  ```
+  If the downstream promise does not specify a rejection handler, rejection reasons will be propagated further downstream.
+   ```js
+  findUser().then(function (user) {
+    throw new PedagogicalException('Upstream error');
+  }).then(function (value) {
+    // never reached
+  }).then(function (value) {
+    // never reached
+  }, function (reason) {
+    // The `PedgagocialException` is propagated all the way down to here
+  });
+  ```
+   Assimilation
+  ------------
+   Sometimes the value you want to propagate to a downstream promise can only be
+  retrieved asynchronously. This can be achieved by returning a promise in the
+  fulfillment or rejection handler. The downstream promise will then be pending
+  until the returned promise is settled. This is called *assimilation*.
+   ```js
+  findUser().then(function (user) {
+    return findCommentsByAuthor(user);
+  }).then(function (comments) {
+    // The user's comments are now available
+  });
+  ```
+   If the assimliated promise rejects, then the downstream promise will also reject.
+   ```js
+  findUser().then(function (user) {
+    return findCommentsByAuthor(user);
+  }).then(function (comments) {
+    // If `findCommentsByAuthor` fulfills, we'll have the value here
+  }, function (reason) {
+    // If `findCommentsByAuthor` rejects, we'll have the reason here
+  });
+  ```
+   Simple Example
+  --------------
+   Synchronous Example
+   ```javascript
+  let result;
+   try {
+    result = findResult();
+    // success
+  } catch(reason) {
+    // failure
+  }
+  ```
+   Errback Example
+   ```js
+  findResult(function(result, err){
+    if (err) {
       // failure
-    }
-    ```
-  
-    Errback Example
-  
-    ```js
-    findResult(function(result, err){
-      if (err) {
-        // failure
-      } else {
-        // success
-      }
-    });
-    ```
-  
-    Promise Example;
-  
-    ```javascript
-    findResult().then(function(result){
+    } else {
       // success
-    }, function(reason){
+    }
+  });
+  ```
+   Promise Example;
+   ```javascript
+  findResult().then(function(result){
+    // success
+  }, function(reason){
+    // failure
+  });
+  ```
+   Advanced Example
+  --------------
+   Synchronous Example
+   ```javascript
+  let author, books;
+   try {
+    author = findAuthor();
+    books  = findBooksByAuthor(author);
+    // success
+  } catch(reason) {
+    // failure
+  }
+  ```
+   Errback Example
+   ```js
+   function foundBooks(books) {
+   }
+   function failure(reason) {
+   }
+   findAuthor(function(author, err){
+    if (err) {
+      failure(err);
       // failure
-    });
-    ```
-  
-    Advanced Example
-    --------------
-  
-    Synchronous Example
-  
-    ```javascript
-    let author, books;
-  
-    try {
-      author = findAuthor();
-      books  = findBooksByAuthor(author);
-      // success
-    } catch(reason) {
-      // failure
-    }
-    ```
-  
-    Errback Example
-  
-    ```js
-  
-    function foundBooks(books) {
-  
-    }
-  
-    function failure(reason) {
-  
-    }
-  
-    findAuthor(function(author, err){
-      if (err) {
-        failure(err);
-        // failure
-      } else {
-        try {
-          findBoooksByAuthor(author, function(books, err) {
-            if (err) {
-              failure(err);
-            } else {
-              try {
-                foundBooks(books);
-              } catch(reason) {
-                failure(reason);
-              }
+    } else {
+      try {
+        findBoooksByAuthor(author, function(books, err) {
+          if (err) {
+            failure(err);
+          } else {
+            try {
+              foundBooks(books);
+            } catch(reason) {
+              failure(reason);
             }
-          });
-        } catch(error) {
-          failure(err);
-        }
-        // success
+          }
+        });
+      } catch(error) {
+        failure(err);
       }
-    });
-    ```
-  
-    Promise Example;
-  
-    ```javascript
-    findAuthor().
-      then(findBooksByAuthor).
-      then(function(books){
-        // found books
-    }).catch(function(reason){
-      // something went wrong
-    });
-    ```
-  
-    @method then
-    @param {Function} onFulfilled
-    @param {Function} onRejected
-    Useful for tooling.
-    @return {Promise}
+      // success
+    }
+  });
+  ```
+   Promise Example;
+   ```javascript
+  findAuthor().
+    then(findBooksByAuthor).
+    then(function(books){
+      // found books
+  }).catch(function(reason){
+    // something went wrong
+  });
+  ```
+   @method then
+  @param {Function} onFulfilled
+  @param {Function} onRejected
+  Useful for tooling.
+  @return {Promise}
   */
-  then: then,
 
   /**
-    `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
-    as the catch block of a try/catch statement.
+  `catch` is simply sugar for `then(undefined, onRejection)` which makes it the same
+  as the catch block of a try/catch statement.
+  ```js
+  function findAuthor(){
+  throw new Error('couldn't find that author');
+  }
+  // synchronous
+  try {
+  findAuthor();
+  } catch(reason) {
+  // something went wrong
+  }
+  // async with promises
+  findAuthor().catch(function(reason){
+  // something went wrong
+  });
+  ```
+  @method catch
+  @param {Function} onRejection
+  Useful for tooling.
+  @return {Promise}
+  */
+
+
+  Promise.prototype.catch = function _catch(onRejection) {
+    return this.then(null, onRejection);
+  };
+
+  /**
+    `finally` will be invoked regardless of the promise's fate just as native
+    try/catch/finally behaves
+  
+    Synchronous example:
   
     ```js
-    function findAuthor(){
-      throw new Error('couldn't find that author');
+    findAuthor() {
+      if (Math.random() > 0.5) {
+        throw new Error();
+      }
+      return new Author();
     }
   
-    // synchronous
     try {
-      findAuthor();
-    } catch(reason) {
-      // something went wrong
+      return findAuthor(); // succeed or fail
+    } catch(error) {
+      return findOtherAuther();
+    } finally {
+      // always runs
+      // doesn't affect the return value
     }
+    ```
   
-    // async with promises
+    Asynchronous example:
+  
+    ```js
     findAuthor().catch(function(reason){
-      // something went wrong
+      return findOtherAuther();
+    }).finally(function(){
+      // author was either found, or not
     });
     ```
   
-    @method catch
-    @param {Function} onRejection
-    Useful for tooling.
+    @method finally
+    @param {Function} callback
     @return {Promise}
   */
-  'catch': function _catch(onRejection) {
-    return this.then(null, onRejection);
-  }
-};
+
+
+  Promise.prototype.finally = function _finally(callback) {
+    var promise = this;
+    var constructor = promise.constructor;
+
+    return promise.then(function (value) {
+      return constructor.resolve(callback()).then(function () {
+        return value;
+      });
+    }, function (reason) {
+      return constructor.resolve(callback()).then(function () {
+        throw reason;
+      });
+    });
+  };
+
+  return Promise;
+}();
+
+Promise$2.prototype.then = then;
+Promise$2.all = all;
+Promise$2.race = race;
+Promise$2.resolve = resolve$1;
+Promise$2.reject = reject$1;
+Promise$2._setScheduler = setScheduler;
+Promise$2._setAsap = setAsap;
+Promise$2._asap = asap;
 
 /*global self*/
-function polyfill$1() {
-    var local = undefined;
+function polyfill() {
+  var local = void 0;
 
-    if (typeof global !== 'undefined') {
-        local = global;
-    } else if (typeof self !== 'undefined') {
-        local = self;
-    } else {
-        try {
-            local = Function('return this')();
-        } catch (e) {
-            throw new Error('polyfill failed because global object is unavailable in this environment');
-        }
+  if (typeof global !== 'undefined') {
+    local = global;
+  } else if (typeof self !== 'undefined') {
+    local = self;
+  } else {
+    try {
+      local = Function('return this')();
+    } catch (e) {
+      throw new Error('polyfill failed because global object is unavailable in this environment');
+    }
+  }
+
+  var P = local.Promise;
+
+  if (P) {
+    var promiseToString = null;
+    try {
+      promiseToString = Object.prototype.toString.call(P.resolve());
+    } catch (e) {
+      // silently ignored
     }
 
-    var P = local.Promise;
-
-    if (P) {
-        var promiseToString = null;
-        try {
-            promiseToString = Object.prototype.toString.call(P.resolve());
-        } catch (e) {
-            // silently ignored
-        }
-
-        if (promiseToString === '[object Promise]' && !P.cast) {
-            return;
-        }
+    if (promiseToString === '[object Promise]' && !P.cast) {
+      return;
     }
+  }
 
-    local.Promise = Promise$3;
+  local.Promise = Promise$2;
 }
 
 // Strange compat..
-Promise$3.polyfill = polyfill$1;
-Promise$3.Promise = Promise$3;
+Promise$2.polyfill = polyfill;
+Promise$2.Promise = Promise$2;
 
-Promise$3.polyfill();
+Promise$2.polyfill();
 
-return Promise$3;
+return Promise$2;
 
 })));
+
+
 
 //# sourceMappingURL=es6-promise.auto.map
 ;
@@ -44124,146 +44146,144 @@ define("emojione", (function (global) {
 
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
- * 默认配置
+ * default settings
  *
- * @author 老雷<leizongmin@gmail.com>
+ * @author Zongmin Lei<leizongmin@gmail.com>
  */
 
-var FilterCSS = require('cssfilter').FilterCSS;
-var getDefaultCSSWhiteList = require('cssfilter').getDefaultWhiteList;
-var _ = require('./util');
+var FilterCSS = require("cssfilter").FilterCSS;
+var getDefaultCSSWhiteList = require("cssfilter").getDefaultWhiteList;
+var _ = require("./util");
 
-// 默认白名单
-function getDefaultWhiteList () {
+function getDefaultWhiteList() {
   return {
-    a:      ['target', 'href', 'title'],
-    abbr:   ['title'],
+    a: ["target", "href", "title"],
+    abbr: ["title"],
     address: [],
-    area:   ['shape', 'coords', 'href', 'alt'],
+    area: ["shape", "coords", "href", "alt"],
     article: [],
-    aside:  [],
-    audio:  ['autoplay', 'controls', 'loop', 'preload', 'src'],
-    b:      [],
-    bdi:    ['dir'],
-    bdo:    ['dir'],
-    big:    [],
-    blockquote: ['cite'],
-    br:     [],
+    aside: [],
+    audio: ["autoplay", "controls", "loop", "preload", "src"],
+    b: [],
+    bdi: ["dir"],
+    bdo: ["dir"],
+    big: [],
+    blockquote: ["cite"],
+    br: [],
     caption: [],
     center: [],
-    cite:   [],
-    code:   [],
-    col:    ['align', 'valign', 'span', 'width'],
-    colgroup: ['align', 'valign', 'span', 'width'],
-    dd:     [],
-    del:    ['datetime'],
-    details: ['open'],
-    div:    [],
-    dl:     [],
-    dt:     [],
-    em:     [],
-    font:   ['color', 'size', 'face'],
+    cite: [],
+    code: [],
+    col: ["align", "valign", "span", "width"],
+    colgroup: ["align", "valign", "span", "width"],
+    dd: [],
+    del: ["datetime"],
+    details: ["open"],
+    div: [],
+    dl: [],
+    dt: [],
+    em: [],
+    font: ["color", "size", "face"],
     footer: [],
-    h1:     [],
-    h2:     [],
-    h3:     [],
-    h4:     [],
-    h5:     [],
-    h6:     [],
+    h1: [],
+    h2: [],
+    h3: [],
+    h4: [],
+    h5: [],
+    h6: [],
     header: [],
-    hr:     [],
-    i:      [],
-    img:    ['src', 'alt', 'title', 'width', 'height'],
-    ins:    ['datetime'],
-    li:     [],
-    mark:   [],
-    nav:    [],
-    ol:     [],
-    p:      [],
-    pre:    [],
-    s:      [],
-    section:[],
-    small:  [],
-    span:   [],
-    sub:    [],
-    sup:    [],
+    hr: [],
+    i: [],
+    img: ["src", "alt", "title", "width", "height"],
+    ins: ["datetime"],
+    li: [],
+    mark: [],
+    nav: [],
+    ol: [],
+    p: [],
+    pre: [],
+    s: [],
+    section: [],
+    small: [],
+    span: [],
+    sub: [],
+    sup: [],
     strong: [],
-    table:  ['width', 'border', 'align', 'valign'],
-    tbody:  ['align', 'valign'],
-    td:     ['width', 'rowspan', 'colspan', 'align', 'valign'],
-    tfoot:  ['align', 'valign'],
-    th:     ['width', 'rowspan', 'colspan', 'align', 'valign'],
-    thead:  ['align', 'valign'],
-    tr:     ['rowspan', 'align', 'valign'],
-    tt:     [],
-    u:      [],
-    ul:     [],
-    video:  ['autoplay', 'controls', 'loop', 'preload', 'src', 'height', 'width']
+    table: ["width", "border", "align", "valign"],
+    tbody: ["align", "valign"],
+    td: ["width", "rowspan", "colspan", "align", "valign"],
+    tfoot: ["align", "valign"],
+    th: ["width", "rowspan", "colspan", "align", "valign"],
+    thead: ["align", "valign"],
+    tr: ["rowspan", "align", "valign"],
+    tt: [],
+    u: [],
+    ul: [],
+    video: ["autoplay", "controls", "loop", "preload", "src", "height", "width"]
   };
 }
 
-// 默认CSS Filter
 var defaultCSSFilter = new FilterCSS();
 
 /**
- * 匹配到标签时的处理方法
+ * default onTag function
  *
  * @param {String} tag
  * @param {String} html
  * @param {Object} options
  * @return {String}
  */
-function onTag (tag, html, options) {
+function onTag(tag, html, options) {
   // do nothing
 }
 
 /**
- * 匹配到不在白名单上的标签时的处理方法
+ * default onIgnoreTag function
  *
  * @param {String} tag
  * @param {String} html
  * @param {Object} options
  * @return {String}
  */
-function onIgnoreTag (tag, html, options) {
+function onIgnoreTag(tag, html, options) {
   // do nothing
 }
 
 /**
- * 匹配到标签属性时的处理方法
+ * default onTagAttr function
  *
  * @param {String} tag
  * @param {String} name
  * @param {String} value
  * @return {String}
  */
-function onTagAttr (tag, name, value) {
+function onTagAttr(tag, name, value) {
   // do nothing
 }
 
 /**
- * 匹配到不在白名单上的标签属性时的处理方法
+ * default onIgnoreTagAttr function
  *
  * @param {String} tag
  * @param {String} name
  * @param {String} value
  * @return {String}
  */
-function onIgnoreTagAttr (tag, name, value) {
+function onIgnoreTagAttr(tag, name, value) {
   // do nothing
 }
 
 /**
- * HTML转义
+ * default escapeHtml function
  *
  * @param {String} html
  */
-function escapeHtml (html) {
-  return html.replace(REGEXP_LT, '&lt;').replace(REGEXP_GT, '&gt;');
+function escapeHtml(html) {
+  return html.replace(REGEXP_LT, "&lt;").replace(REGEXP_GT, "&gt;");
 }
 
 /**
- * 安全的标签属性值
+ * default safeAttrValue function
  *
  * @param {String} tag
  * @param {String} name
@@ -44271,46 +44291,46 @@ function escapeHtml (html) {
  * @param {Object} cssFilter
  * @return {String}
  */
-function safeAttrValue (tag, name, value, cssFilter) {
-  // 转换为友好的属性值，再做判断
+function safeAttrValue(tag, name, value, cssFilter) {
+  // unescape attribute value firstly
   value = friendlyAttrValue(value);
 
-  if (name === 'href' || name === 'src') {
-    // 过滤 href 和 src 属性
-    // 仅允许 http:// | https:// | mailto: | / | # 开头的地址
+  if (name === "href" || name === "src") {
+    // filter `href` and `src` attribute
+    // only allow the value that starts with `http://` | `https://` | `mailto:` | `/` | `#`
     value = _.trim(value);
-    if (value === '#') return '#';
-    if (!(value.substr(0, 7) === 'http://' ||
-         value.substr(0, 8) === 'https://' ||
-         value.substr(0, 7) === 'mailto:' ||
-         value[0] === '#' ||
-         value[0] === '/')) {
-      return '';
+    if (value === "#") return "#";
+    if (
+      !(
+        value.substr(0, 7) === "http://" ||
+        value.substr(0, 8) === "https://" ||
+        value.substr(0, 7) === "mailto:" ||
+        value.substr(0, 4) === "tel:" ||
+        value[0] === "#" ||
+        value[0] === "/"
+      )
+    ) {
+      return "";
     }
-  } else if (name === 'background') {
-    // 过滤 background 属性 （这个xss漏洞较老了，可能已经不适用）
-    // javascript:
+  } else if (name === "background") {
+    // filter `background` attribute (maybe no use)
+    // `javascript:`
     REGEXP_DEFAULT_ON_TAG_ATTR_4.lastIndex = 0;
     if (REGEXP_DEFAULT_ON_TAG_ATTR_4.test(value)) {
-      return '';
+      return "";
     }
-  } else if (name === 'style') {
-    // /*注释*/
-    /*REGEXP_DEFAULT_ON_TAG_ATTR_3.lastIndex = 0;
-    if (REGEXP_DEFAULT_ON_TAG_ATTR_3.test(value)) {
-      return '';
-    }*/
-    // expression()
+  } else if (name === "style") {
+    // `expression()`
     REGEXP_DEFAULT_ON_TAG_ATTR_7.lastIndex = 0;
     if (REGEXP_DEFAULT_ON_TAG_ATTR_7.test(value)) {
-      return '';
+      return "";
     }
-    // url()
+    // `url()`
     REGEXP_DEFAULT_ON_TAG_ATTR_8.lastIndex = 0;
     if (REGEXP_DEFAULT_ON_TAG_ATTR_8.test(value)) {
       REGEXP_DEFAULT_ON_TAG_ATTR_4.lastIndex = 0;
       if (REGEXP_DEFAULT_ON_TAG_ATTR_4.test(value)) {
-        return '';
+        return "";
       }
     }
     if (cssFilter !== false) {
@@ -44319,161 +44339,166 @@ function safeAttrValue (tag, name, value, cssFilter) {
     }
   }
 
-  // 输出时需要转义<>"
+  // escape `<>"` before returns
   value = escapeAttrValue(value);
   return value;
 }
 
-// 正则表达式
+// RegExp list
 var REGEXP_LT = /</g;
 var REGEXP_GT = />/g;
 var REGEXP_QUOTE = /"/g;
 var REGEXP_QUOTE_2 = /&quot;/g;
-var REGEXP_ATTR_VALUE_1 = /&#([a-zA-Z0-9]*);?/img;
-var REGEXP_ATTR_VALUE_COLON = /&colon;?/img;
-var REGEXP_ATTR_VALUE_NEWLINE = /&newline;?/img;
-var REGEXP_DEFAULT_ON_TAG_ATTR_3 = /\/\*|\*\//mg;
-var REGEXP_DEFAULT_ON_TAG_ATTR_4 = /((j\s*a\s*v\s*a|v\s*b|l\s*i\s*v\s*e)\s*s\s*c\s*r\s*i\s*p\s*t\s*|m\s*o\s*c\s*h\s*a)\:/ig;
-var REGEXP_DEFAULT_ON_TAG_ATTR_5 = /^[\s"'`]*(d\s*a\s*t\s*a\s*)\:/ig;
-var REGEXP_DEFAULT_ON_TAG_ATTR_6 = /^[\s"'`]*(d\s*a\s*t\s*a\s*)\:\s*image\//ig;
-var REGEXP_DEFAULT_ON_TAG_ATTR_7 = /e\s*x\s*p\s*r\s*e\s*s\s*s\s*i\s*o\s*n\s*\(.*/ig;
-var REGEXP_DEFAULT_ON_TAG_ATTR_8 = /u\s*r\s*l\s*\(.*/ig;
+var REGEXP_ATTR_VALUE_1 = /&#([a-zA-Z0-9]*);?/gim;
+var REGEXP_ATTR_VALUE_COLON = /&colon;?/gim;
+var REGEXP_ATTR_VALUE_NEWLINE = /&newline;?/gim;
+var REGEXP_DEFAULT_ON_TAG_ATTR_3 = /\/\*|\*\//gm;
+var REGEXP_DEFAULT_ON_TAG_ATTR_4 = /((j\s*a\s*v\s*a|v\s*b|l\s*i\s*v\s*e)\s*s\s*c\s*r\s*i\s*p\s*t\s*|m\s*o\s*c\s*h\s*a)\:/gi;
+var REGEXP_DEFAULT_ON_TAG_ATTR_5 = /^[\s"'`]*(d\s*a\s*t\s*a\s*)\:/gi;
+var REGEXP_DEFAULT_ON_TAG_ATTR_6 = /^[\s"'`]*(d\s*a\s*t\s*a\s*)\:\s*image\//gi;
+var REGEXP_DEFAULT_ON_TAG_ATTR_7 = /e\s*x\s*p\s*r\s*e\s*s\s*s\s*i\s*o\s*n\s*\(.*/gi;
+var REGEXP_DEFAULT_ON_TAG_ATTR_8 = /u\s*r\s*l\s*\(.*/gi;
 
 /**
- * 对双引号进行转义
+ * escape doube quote
  *
  * @param {String} str
  * @return {String} str
  */
-function escapeQuote (str) {
-  return str.replace(REGEXP_QUOTE, '&quot;');
+function escapeQuote(str) {
+  return str.replace(REGEXP_QUOTE, "&quot;");
 }
 
 /**
- * 对双引号进行转义
+ * unescape double quote
  *
  * @param {String} str
  * @return {String} str
  */
-function unescapeQuote (str) {
+function unescapeQuote(str) {
   return str.replace(REGEXP_QUOTE_2, '"');
 }
 
 /**
- * 对html实体编码进行转义
+ * escape html entities
  *
  * @param {String} str
  * @return {String}
  */
-function escapeHtmlEntities (str) {
-  return str.replace(REGEXP_ATTR_VALUE_1, function replaceUnicode (str, code) {
-    return (code[0] === 'x' || code[0] === 'X')
-            ? String.fromCharCode(parseInt(code.substr(1), 16))
-            : String.fromCharCode(parseInt(code, 10));
+function escapeHtmlEntities(str) {
+  return str.replace(REGEXP_ATTR_VALUE_1, function replaceUnicode(str, code) {
+    return code[0] === "x" || code[0] === "X"
+      ? String.fromCharCode(parseInt(code.substr(1), 16))
+      : String.fromCharCode(parseInt(code, 10));
   });
 }
 
 /**
- * 对html5新增的危险实体编码进行转义
+ * escape html5 new danger entities
  *
  * @param {String} str
  * @return {String}
  */
-function escapeDangerHtml5Entities (str) {
-  return str.replace(REGEXP_ATTR_VALUE_COLON, ':')
-            .replace(REGEXP_ATTR_VALUE_NEWLINE, ' ');
+function escapeDangerHtml5Entities(str) {
+  return str
+    .replace(REGEXP_ATTR_VALUE_COLON, ":")
+    .replace(REGEXP_ATTR_VALUE_NEWLINE, " ");
 }
 
 /**
- * 清除不可见字符
+ * clear nonprintable characters
  *
  * @param {String} str
  * @return {String}
  */
-function clearNonPrintableCharacter (str) {
-  var str2 = '';
+function clearNonPrintableCharacter(str) {
+  var str2 = "";
   for (var i = 0, len = str.length; i < len; i++) {
-    str2 += str.charCodeAt(i) < 32 ? ' ' : str.charAt(i);
+    str2 += str.charCodeAt(i) < 32 ? " " : str.charAt(i);
   }
   return _.trim(str2);
 }
 
 /**
- * 将标签的属性值转换成一般字符，便于分析
+ * get friendly attribute value
  *
  * @param {String} str
  * @return {String}
  */
-function friendlyAttrValue (str) {
-  str = unescapeQuote(str);             // 双引号
-  str = escapeHtmlEntities(str);         // 转换HTML实体编码
-  str = escapeDangerHtml5Entities(str);  // 转换危险的HTML5新增实体编码
-  str = clearNonPrintableCharacter(str); // 清除不可见字符
+function friendlyAttrValue(str) {
+  str = unescapeQuote(str);
+  str = escapeHtmlEntities(str);
+  str = escapeDangerHtml5Entities(str);
+  str = clearNonPrintableCharacter(str);
   return str;
 }
 
 /**
- * 转义用于输出的标签属性值
+ * unescape attribute value
  *
  * @param {String} str
  * @return {String}
  */
-function escapeAttrValue (str) {
+function escapeAttrValue(str) {
   str = escapeQuote(str);
   str = escapeHtml(str);
   return str;
 }
 
 /**
- * 去掉不在白名单中的标签onIgnoreTag处理方法
+ * `onIgnoreTag` function for removing all the tags that are not in whitelist
  */
-function onIgnoreTagStripAll () {
-  return '';
+function onIgnoreTagStripAll() {
+  return "";
 }
 
 /**
- * 删除标签体
+ * remove tag body
+ * specify a `tags` list, if the tag is not in the `tags` list then process by the specify function (optional)
  *
- * @param {array} tags 要删除的标签列表
- * @param {function} next 对不在列表中的标签的处理函数，可选
+ * @param {array} tags
+ * @param {function} next
  */
-function StripTagBody (tags, next) {
-  if (typeof(next) !== 'function') {
-    next = function () {};
+function StripTagBody(tags, next) {
+  if (typeof next !== "function") {
+    next = function() {};
   }
 
   var isRemoveAllTag = !Array.isArray(tags);
-  function isRemoveTag (tag) {
+  function isRemoveTag(tag) {
     if (isRemoveAllTag) return true;
-    return (_.indexOf(tags, tag) !== -1);
+    return _.indexOf(tags, tag) !== -1;
   }
 
-  var removeList = [];   // 要删除的位置范围列表
-  var posStart = false;  // 当前标签开始位置
+  var removeList = [];
+  var posStart = false;
 
   return {
-    onIgnoreTag: function (tag, html, options) {
+    onIgnoreTag: function(tag, html, options) {
       if (isRemoveTag(tag)) {
         if (options.isClosing) {
-          var ret = '[/removed]';
+          var ret = "[/removed]";
           var end = options.position + ret.length;
-          removeList.push([posStart !== false ? posStart : options.position, end]);
+          removeList.push([
+            posStart !== false ? posStart : options.position,
+            end
+          ]);
           posStart = false;
           return ret;
         } else {
           if (!posStart) {
             posStart = options.position;
           }
-          return '[removed]';
+          return "[removed]";
         }
       } else {
         return next(tag, html, options);
       }
     },
-    remove: function (html) {
-      var rethtml = '';
+    remove: function(html) {
+      var rethtml = "";
       var lastPos = 0;
-      _.forEach(removeList, function (pos) {
+      _.forEach(removeList, function(pos) {
         rethtml += html.slice(lastPos, pos[0]);
         lastPos = pos[1];
       });
@@ -44484,25 +44509,25 @@ function StripTagBody (tags, next) {
 }
 
 /**
- * 去除备注标签
+ * remove html comments
  *
  * @param {String} html
  * @return {String}
  */
-function stripCommentTag (html) {
-  return html.replace(STRIP_COMMENT_TAG_REGEXP, '');
+function stripCommentTag(html) {
+  return html.replace(STRIP_COMMENT_TAG_REGEXP, "");
 }
 var STRIP_COMMENT_TAG_REGEXP = /<!--[\s\S]*?-->/g;
 
 /**
- * 去除不可见字符
+ * remove invisible characters
  *
  * @param {String} html
  * @return {String}
  */
-function stripBlankChar (html) {
-  var chars = html.split('');
-  chars = chars.filter(function (char) {
+function stripBlankChar(html) {
+  var chars = html.split("");
+  chars = chars.filter(function(char) {
     var c = char.charCodeAt(0);
     if (c === 127) return false;
     if (c <= 31) {
@@ -44511,9 +44536,8 @@ function stripBlankChar (html) {
     }
     return true;
   });
-  return chars.join('');
+  return chars.join("");
 }
-
 
 exports.whiteList = getDefaultWhiteList();
 exports.getDefaultWhiteList = getDefaultWhiteList;
@@ -44539,57 +44563,53 @@ exports.getDefaultCSSWhiteList = getDefaultCSSWhiteList;
 
 },{"./util":4,"cssfilter":8}],2:[function(require,module,exports){
 /**
- * 模块入口
+ * xss
  *
- * @author 老雷<leizongmin@gmail.com>
+ * @author Zongmin Lei<leizongmin@gmail.com>
  */
 
-var DEFAULT = require('./default');
-var parser = require('./parser');
-var FilterXSS = require('./xss');
-
+var DEFAULT = require("./default");
+var parser = require("./parser");
+var FilterXSS = require("./xss");
 
 /**
- * XSS过滤
+ * filter xss function
  *
- * @param {String} html 要过滤的HTML代码
- * @param {Object} options 选项：whiteList, onTag, onTagAttr, onIgnoreTag, onIgnoreTagAttr, safeAttrValue, escapeHtml
+ * @param {String} html
+ * @param {Object} options { whiteList, onTag, onTagAttr, onIgnoreTag, onIgnoreTagAttr, safeAttrValue, escapeHtml }
  * @return {String}
  */
-function filterXSS (html, options) {
+function filterXSS(html, options) {
   var xss = new FilterXSS(options);
   return xss.process(html);
 }
 
-
-// 输出
 exports = module.exports = filterXSS;
 exports.FilterXSS = FilterXSS;
 for (var i in DEFAULT) exports[i] = DEFAULT[i];
 for (var i in parser) exports[i] = parser[i];
 
-
-// 在浏览器端使用
-if (typeof window !== 'undefined') {
+// using `xss` on the browser, output `filterXSS` to the globals
+if (typeof window !== "undefined") {
   window.filterXSS = module.exports;
 }
 
 },{"./default":1,"./parser":3,"./xss":5}],3:[function(require,module,exports){
 /**
- * 简单 HTML Parser
+ * Simple HTML Parser
  *
- * @author 老雷<leizongmin@gmail.com>
+ * @author Zongmin Lei<leizongmin@gmail.com>
  */
 
-var _ = require('./util');
+var _ = require("./util");
 
 /**
- * 获取标签的名称
+ * get tag name
  *
- * @param {String} html 如：'<a hef="#">'
+ * @param {String} html e.g. '<a hef="#">'
  * @return {String}
  */
-function getTagName (html) {
+function getTagName(html) {
   var i = _.spaceIndex(html);
   if (i === -1) {
     var tagName = html.slice(1, -1);
@@ -44597,73 +44617,72 @@ function getTagName (html) {
     var tagName = html.slice(1, i + 1);
   }
   tagName = _.trim(tagName).toLowerCase();
-  if (tagName.slice(0, 1) === '/') tagName = tagName.slice(1);
-  if (tagName.slice(-1) === '/') tagName = tagName.slice(0, -1);
+  if (tagName.slice(0, 1) === "/") tagName = tagName.slice(1);
+  if (tagName.slice(-1) === "/") tagName = tagName.slice(0, -1);
   return tagName;
 }
 
 /**
- * 是否为闭合标签
+ * is close tag?
  *
  * @param {String} html 如：'<a hef="#">'
  * @return {Boolean}
  */
-function isClosing (html) {
-  return (html.slice(0, 2) === '</');
+function isClosing(html) {
+  return html.slice(0, 2) === "</";
 }
 
 /**
- * 分析HTML代码，调用相应的函数处理，返回处理后的HTML
+ * parse input html and returns processed html
  *
  * @param {String} html
- * @param {Function} onTag 处理标签的函数
- *   参数格式： function (sourcePosition, position, tag, html, isClosing)
- * @param {Function} escapeHtml 对HTML进行转义的函数
+ * @param {Function} onTag e.g. function (sourcePosition, position, tag, html, isClosing)
+ * @param {Function} escapeHtml
  * @return {String}
  */
-function parseTag (html, onTag, escapeHtml) {
-  'user strict';
+function parseTag(html, onTag, escapeHtml) {
+  "user strict";
 
-  var rethtml = '';        // 待返回的HTML
-  var lastPos = 0;         // 上一个标签结束位置
-  var tagStart = false;    // 当前标签开始位置
-  var quoteStart = false;  // 引号开始位置
-  var currentPos = 0;      // 当前位置
-  var len = html.length;   // HTML长度
-  var currentHtml = '';    // 当前标签的HTML代码
-  var currentTagName = ''; // 当前标签的名称
+  var rethtml = "";
+  var lastPos = 0;
+  var tagStart = false;
+  var quoteStart = false;
+  var currentPos = 0;
+  var len = html.length;
+  var currentTagName = "";
+  var currentHtml = "";
 
-  // 逐个分析字符
   for (currentPos = 0; currentPos < len; currentPos++) {
     var c = html.charAt(currentPos);
     if (tagStart === false) {
-      if (c === '<') {
+      if (c === "<") {
         tagStart = currentPos;
         continue;
       }
     } else {
       if (quoteStart === false) {
-        if (c === '<') {
+        if (c === "<") {
           rethtml += escapeHtml(html.slice(lastPos, currentPos));
           tagStart = currentPos;
           lastPos = currentPos;
           continue;
         }
-        if (c === '>') {
+        if (c === ">") {
           rethtml += escapeHtml(html.slice(lastPos, tagStart));
           currentHtml = html.slice(tagStart, currentPos + 1);
           currentTagName = getTagName(currentHtml);
-          rethtml += onTag(tagStart,
-                           rethtml.length,
-                           currentTagName,
-                           currentHtml,
-                           isClosing(currentHtml));
+          rethtml += onTag(
+            tagStart,
+            rethtml.length,
+            currentTagName,
+            currentHtml,
+            isClosing(currentHtml)
+          );
           lastPos = currentPos + 1;
           tagStart = false;
           continue;
         }
-        // HTML标签内的引号仅当前一个字符是等于号时才有效
-        if ((c === '"' || c === "'") && html.charAt(currentPos - 1) === '=') {
+        if ((c === '"' || c === "'") && html.charAt(currentPos - 1) === "=") {
           quoteStart = c;
           continue;
         }
@@ -44682,45 +44701,46 @@ function parseTag (html, onTag, escapeHtml) {
   return rethtml;
 }
 
-// 不符合属性名称规则的正则表达式
-var REGEXP_ATTR_NAME = /[^a-zA-Z0-9_:\.\-]/img;
+var REGEXP_ILLEGAL_ATTR_NAME = /[^a-zA-Z0-9_:\.\-]/gim;
 
 /**
- * 分析标签HTML代码，调用相应的函数处理，返回HTML
+ * parse input attributes and returns processed attributes
  *
- * @param {String} html 如标签'<a href="#" target="_blank">' 则为 'href="#" target="_blank"'
- * @param {Function} onAttr 处理属性值的函数
- *   函数格式： function (name, value)
+ * @param {String} html e.g. `href="#" target="_blank"`
+ * @param {Function} onAttr e.g. `function (name, value)`
  * @return {String}
  */
-function parseAttr (html, onAttr) {
-  'user strict';
+function parseAttr(html, onAttr) {
+  "user strict";
 
-  var lastPos = 0;        // 当前位置
-  var retAttrs = [];      // 待返回的属性列表
-  var tmpName = false;    // 临时属性名称
-  var len = html.length;  // HTML代码长度
+  var lastPos = 0;
+  var retAttrs = [];
+  var tmpName = false;
+  var len = html.length;
 
-  function addAttr (name, value) {
+  function addAttr(name, value) {
     name = _.trim(name);
-    name = name.replace(REGEXP_ATTR_NAME, '').toLowerCase();
+    name = name.replace(REGEXP_ILLEGAL_ATTR_NAME, "").toLowerCase();
     if (name.length < 1) return;
-    var ret = onAttr(name, value || '');
+    var ret = onAttr(name, value || "");
     if (ret) retAttrs.push(ret);
-  };
+  }
 
   // 逐个分析字符
   for (var i = 0; i < len; i++) {
     var c = html.charAt(i);
     var v, j;
-    if (tmpName === false && c === '=') {
+    if (tmpName === false && c === "=") {
       tmpName = html.slice(lastPos, i);
       lastPos = i + 1;
       continue;
     }
     if (tmpName !== false) {
-      // HTML标签内的引号仅当前一个字符是等于号时才有效
-      if (i === lastPos && (c === '"' || c === "'") && html.charAt(i - 1) === '=') {
+      if (
+        i === lastPos &&
+        (c === '"' || c === "'") &&
+        html.charAt(i - 1) === "="
+      ) {
         j = html.indexOf(c, i + 1);
         if (j === -1) {
           break;
@@ -44735,7 +44755,7 @@ function parseAttr (html, onAttr) {
       }
     }
     if (/\s|\n|\t/.test(c)) {
-      html = html.replace(/\s|\n|\t/g, ' ');
+      html = html.replace(/\s|\n|\t/g, " ");
       if (tmpName === false) {
         j = findNextEqual(html, i);
         if (j === -1) {
@@ -44772,51 +44792,52 @@ function parseAttr (html, onAttr) {
     }
   }
 
-  return _.trim(retAttrs.join(' '));
+  return _.trim(retAttrs.join(" "));
 }
 
-function findNextEqual (str, i) {
+function findNextEqual(str, i) {
   for (; i < str.length; i++) {
     var c = str[i];
-    if (c === ' ') continue;
-    if (c === '=') return i;
+    if (c === " ") continue;
+    if (c === "=") return i;
     return -1;
   }
 }
 
-function findBeforeEqual (str, i) {
+function findBeforeEqual(str, i) {
   for (; i > 0; i--) {
     var c = str[i];
-    if (c === ' ') continue;
-    if (c === '=') return i;
+    if (c === " ") continue;
+    if (c === "=") return i;
     return -1;
   }
 }
 
-function isQuoteWrapString (text) {
-  if ((text[0] === '"' && text[text.length - 1] === '"') ||
-      (text[0] === '\'' && text[text.length - 1] === '\'')) {
+function isQuoteWrapString(text) {
+  if (
+    (text[0] === '"' && text[text.length - 1] === '"') ||
+    (text[0] === "'" && text[text.length - 1] === "'")
+  ) {
     return true;
   } else {
     return false;
   }
-};
+}
 
-function stripQuoteWrap (text) {
+function stripQuoteWrap(text) {
   if (isQuoteWrapString(text)) {
     return text.substr(1, text.length - 2);
   } else {
     return text;
   }
-};
-
+}
 
 exports.parseTag = parseTag;
 exports.parseAttr = parseAttr;
 
 },{"./util":4}],4:[function(require,module,exports){
 module.exports = {
-  indexOf: function (arr, item) {
+  indexOf: function(arr, item) {
     var i, j;
     if (Array.prototype.indexOf) {
       return arr.indexOf(item);
@@ -44828,7 +44849,7 @@ module.exports = {
     }
     return -1;
   },
-  forEach: function (arr, fn, scope) {
+  forEach: function(arr, fn, scope) {
     var i, j;
     if (Array.prototype.forEach) {
       return arr.forEach(fn, scope);
@@ -44837,76 +44858,75 @@ module.exports = {
       fn.call(scope, arr[i], i, arr);
     }
   },
-  trim: function (str) {
+  trim: function(str) {
     if (String.prototype.trim) {
       return str.trim();
     }
-    return str.replace(/(^\s*)|(\s*$)/g, '');
+    return str.replace(/(^\s*)|(\s*$)/g, "");
   },
-  spaceIndex: function (str) {
-      var reg = /\s|\n|\t/;
-      var match = reg.exec(str);
-      return match ? match.index : -1;
+  spaceIndex: function(str) {
+    var reg = /\s|\n|\t/;
+    var match = reg.exec(str);
+    return match ? match.index : -1;
   }
 };
 
 },{}],5:[function(require,module,exports){
 /**
- * 过滤XSS
+ * filter xss
  *
- * @author 老雷<leizongmin@gmail.com>
+ * @author Zongmin Lei<leizongmin@gmail.com>
  */
 
-var FilterCSS = require('cssfilter').FilterCSS;
-var DEFAULT = require('./default');
-var parser = require('./parser');
+var FilterCSS = require("cssfilter").FilterCSS;
+var DEFAULT = require("./default");
+var parser = require("./parser");
 var parseTag = parser.parseTag;
 var parseAttr = parser.parseAttr;
-var _ = require('./util');
-
+var _ = require("./util");
 
 /**
- * 返回值是否为空
+ * returns `true` if the input value is `undefined` or `null`
  *
  * @param {Object} obj
  * @return {Boolean}
  */
-function isNull (obj) {
-  return (obj === undefined || obj === null);
+function isNull(obj) {
+  return obj === undefined || obj === null;
 }
 
 /**
- * 取标签内的属性列表字符串
+ * get attributes for a tag
  *
  * @param {String} html
  * @return {Object}
  *   - {String} html
  *   - {Boolean} closing
  */
-function getAttrs (html) {
+function getAttrs(html) {
   var i = _.spaceIndex(html);
   if (i === -1) {
     return {
-      html:    '',
-      closing: (html[html.length - 2] === '/')
+      html: "",
+      closing: html[html.length - 2] === "/"
     };
   }
   html = _.trim(html.slice(i + 1, -1));
-  var isClosing = (html[html.length - 1] === '/');
+  var isClosing = html[html.length - 1] === "/";
   if (isClosing) html = _.trim(html.slice(0, -1));
   return {
-    html:    html,
+    html: html,
     closing: isClosing
   };
 }
 
 /**
- * 浅拷贝对象
+ * shallow copy
  *
  * @param {Object} obj
  * @return {Object}
  */
-function shallowCopyObject (obj) {
+function shallowCopyObject(obj) {
   var ret = {};
   for (var i in obj) {
     ret[i] = obj[i];
@@ -44915,20 +44935,22 @@ function shallowCopyObject (obj) {
 }
 
 /**
- * XSS过滤对象
+ * FilterXSS class
  *
  * @param {Object} options
- *   选项：whiteList, onTag, onTagAttr, onIgnoreTag,
+ *        whiteList, onTag, onTagAttr, onIgnoreTag,
  *        onIgnoreTagAttr, safeAttrValue, escapeHtml
  *        stripIgnoreTagBody, allowCommentTag, stripBlankChar
- *        css{whiteList, onAttr, onIgnoreAttr} css=false表示禁用cssfilter
+ *        css{whiteList, onAttr, onIgnoreAttr} `css=false` means don't use `cssfilter`
  */
-function FilterXSS (options) {
+function FilterXSS(options) {
   options = shallowCopyObject(options || {});
 
   if (options.stripIgnoreTag) {
     if (options.onIgnoreTag) {
-      console.error('Notes: cannot use these two options "stripIgnoreTag" and "onIgnoreTag" at the same time');
+      console.error(
+        'Notes: cannot use these two options "stripIgnoreTag" and "onIgnoreTag" at the same time'
+      );
     }
     options.onIgnoreTag = DEFAULT.onIgnoreTagStripAll;
   }
@@ -44951,16 +44973,16 @@ function FilterXSS (options) {
 }
 
 /**
- * 开始处理
+ * start process and returns result
  *
  * @param {String} html
  * @return {String}
  */
-FilterXSS.prototype.process = function (html) {
-  // 兼容各种奇葩输入
-  html = html || '';
+FilterXSS.prototype.process = function(html) {
+  // compatible with the input
+  html = html || "";
   html = html.toString();
-  if (!html) return '';
+  if (!html) return "";
 
   var me = this;
   var options = me.options;
@@ -44973,93 +44995,92 @@ FilterXSS.prototype.process = function (html) {
   var escapeHtml = options.escapeHtml;
   var cssFilter = me.cssFilter;
 
-  // 是否清除不可见字符
+  // remove invisible characters
   if (options.stripBlankChar) {
     html = DEFAULT.stripBlankChar(html);
   }
 
-  // 是否禁止备注标签
+  // remove html comments
   if (!options.allowCommentTag) {
     html = DEFAULT.stripCommentTag(html);
   }
 
-  // 如果开启了stripIgnoreTagBody
+  // if enable stripIgnoreTagBody
   var stripIgnoreTagBody = false;
   if (options.stripIgnoreTagBody) {
-    var stripIgnoreTagBody = DEFAULT.StripTagBody(options.stripIgnoreTagBody, onIgnoreTag);
+    var stripIgnoreTagBody = DEFAULT.StripTagBody(
+      options.stripIgnoreTagBody,
+      onIgnoreTag
+    );
     onIgnoreTag = stripIgnoreTagBody.onIgnoreTag;
   }
 
-  var retHtml = parseTag(html, function (sourcePosition, position, tag, html, isClosing) {
-    var info = {
-      sourcePosition: sourcePosition,
-      position:       position,
-      isClosing:      isClosing,
-      isWhite:        (tag in whiteList)
-    };
+  var retHtml = parseTag(
+    html,
+    function(sourcePosition, position, tag, html, isClosing) {
+      var info = {
+        sourcePosition: sourcePosition,
+        position: position,
+        isClosing: isClosing,
+        isWhite: whiteList.hasOwnProperty(tag)
+      };
 
-    // 调用onTag处理
-    var ret = onTag(tag, html, info);
-    if (!isNull(ret)) return ret;
-
-    // 默认标签处理方法
-    if (info.isWhite) {
-      // 白名单标签，解析标签属性
-      // 如果是闭合标签，则不需要解析属性
-      if (info.isClosing) {
-        return '</' + tag + '>';
-      }
-
-      var attrs = getAttrs(html);
-      var whiteAttrList = whiteList[tag];
-      var attrsHtml = parseAttr(attrs.html, function (name, value) {
-
-        // 调用onTagAttr处理
-        var isWhiteAttr = (_.indexOf(whiteAttrList, name) !== -1);
-        var ret = onTagAttr(tag, name, value, isWhiteAttr);
-        if (!isNull(ret)) return ret;
-
-        // 默认的属性处理方法
-        if (isWhiteAttr) {
-          // 白名单属性，调用safeAttrValue过滤属性值
-          value = safeAttrValue(tag, name, value, cssFilter);
-          if (value) {
-            return name + '="' + value + '"';
-          } else {
-            return name;
-          }
-        } else {
-          // 非白名单属性，调用onIgnoreTagAttr处理
-          var ret = onIgnoreTagAttr(tag, name, value, isWhiteAttr);
-          if (!isNull(ret)) return ret;
-          return;
-        }
-      });
-
-      // 构造新的标签代码
-      var html = '<' + tag;
-      if (attrsHtml) html += ' ' + attrsHtml;
-      if (attrs.closing) html += ' /';
-      html += '>';
-      return html;
-
-    } else {
-      // 非白名单标签，调用onIgnoreTag处理
-      var ret = onIgnoreTag(tag, html, info);
+      // call `onTag()`
+      var ret = onTag(tag, html, info);
       if (!isNull(ret)) return ret;
-      return escapeHtml(html);
-    }
 
-  }, escapeHtml);
+      if (info.isWhite) {
+        if (info.isClosing) {
+          return "</" + tag + ">";
+        }
 
-  // 如果开启了stripIgnoreTagBody，需要对结果再进行处理
+        var attrs = getAttrs(html);
+        var whiteAttrList = whiteList[tag];
+        var attrsHtml = parseAttr(attrs.html, function(name, value) {
+          // call `onTagAttr()`
+          var isWhiteAttr = _.indexOf(whiteAttrList, name) !== -1;
+          var ret = onTagAttr(tag, name, value, isWhiteAttr);
+          if (!isNull(ret)) return ret;
+
+          if (isWhiteAttr) {
+            // call `safeAttrValue()`
+            value = safeAttrValue(tag, name, value, cssFilter);
+            if (value) {
+              return name + '="' + value + '"';
+            } else {
+              return name;
+            }
+          } else {
+            // call `onIgnoreTagAttr()`
+            var ret = onIgnoreTagAttr(tag, name, value, isWhiteAttr);
+            if (!isNull(ret)) return ret;
+            return;
+          }
+        });
+
+        // build new tag html
+        var html = "<" + tag;
+        if (attrsHtml) html += " " + attrsHtml;
+        if (attrs.closing) html += " /";
+        html += ">";
+        return html;
+      } else {
+        // call `onIgnoreTag()`
+        var ret = onIgnoreTag(tag, html, info);
+        if (!isNull(ret)) return ret;
+        return escapeHtml(html);
+      }
+    },
+    escapeHtml
+  );
+
+  // if enable stripIgnoreTagBody
   if (stripIgnoreTagBody) {
     retHtml = stripIgnoreTagBody.remove(retHtml);
   }
 
   return retHtml;
 };
-
 
 module.exports = FilterXSS;
 
@@ -45958,9 +45979,9 @@ __p += '\n                    </a>\n                ';
  } ;
 __p += '\n                <p class="user-custom-message">' +
 __e( o.status ) +
-'</p>\n            </div>\n        </div>\n    </div>\n    <div class="col-sm-3 col-lg-2">\n        <div class="chatbox-buttons row no-gutters">\n            <a class="chatbox-btn close-chatbox-button fa fa-close" title=' +
+'</p>\n            </div>\n        </div>\n    </div>\n    <div class="chatbox-buttons row no-gutters">\n        <a class="chatbox-btn close-chatbox-button fa fa-close" title=' +
 __e(o.info_close) +
-'></a>\n            <!-- <a class="chatbox-btn fa fa-vcard" title="Contact profile" data-toggle="modal" data-target="#contactProfileModal"></a> -->\n        </div>\n    </div>\n</div>\n';
+'></a>\n        <!-- <a class="chatbox-btn fa fa-vcard" title="Contact profile" data-toggle="modal" data-target="#contactProfileModal"></a> -->\n    </div>\n</div>\n';
 return __p
 };});
 
@@ -46180,12 +46201,6 @@ __p += '\n';
  if (o.show_call_button)  { ;
 __p += '\n<li class="toggle-call fa fa-phone" title="' +
 __e(o.label_start_call) +
-'"></li>\n';
- } ;
-__p += '\n';
- if (o.show_clear_button)  { ;
-__p += '\n<li class="toggle-clear right fa fa-eraser" title="' +
-__e(o.label_clear) +
 '"></li>\n';
  } ;
 __p += '\n';
@@ -47004,7 +47019,7 @@ return __p
           __ = _converse.__;
 
       _converse.api.settings.update({
-        'use_emojione': true,
+        'use_emojione': false,
         'emojione_image_path': emojione.imagePathPNG,
         'chatview_avatar_height': 32,
         'chatview_avatar_width': 32,
@@ -47269,7 +47284,6 @@ return __p
             'label_start_call': __('Start a call'),
             'label_toggle_spoiler': label_toggle_spoiler,
             'show_call_button': _converse.visible_toolbar_buttons.call,
-            'show_clear_button': _converse.visible_toolbar_buttons.clear,
             'show_spoiler_button': _converse.visible_toolbar_buttons.spoiler,
             'use_emoji': _converse.visible_toolbar_buttons.emoji
           });
@@ -48212,7 +48226,11 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 __p += '<!-- Add contact Modal -->\n<div class="modal fade" id="add-contact-modal" tabindex="-1" role="dialog" aria-labelledby="addContactModalLabel" aria-hidden="true">\n    <div class="modal-dialog" role="document">\n        <div class="modal-content">\n            <div class="modal-header">\n                <h5 class="modal-title" id="addContactModalLabel">' +
 __e(o.heading_new_contact) +
-'</h5>\n                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n            </div>\n            <form class="converse-form add-xmpp-contact">\n                <div class="modal-body">\n                    <div class="form-group">\n                        <label for="jid">' +
+'</h5>\n                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n            </div>\n            <form class="converse-form add-xmpp-contact">\n                <div class="modal-body">\n                    <div class="form-group ';
+ if (o._converse.xhr_user_search_url) { ;
+__p += ' hidden ';
+ } ;
+__p += '">\n                        <label class="clearfix" for="jid">' +
 __e(o.label_xmpp_address) +
 ':</label>\n                        <input type="text" name="jid" required="required" value="' +
 __e(o.jid) +
@@ -48222,13 +48240,23 @@ __p += ' is-invalid ';
  } ;
 __p += '"\n                               placeholder="' +
 __e(o.contact_placeholder) +
-'">\n                        ';
+'"/>\n                        ';
  if (o.error_message) { ;
 __p += '\n                            <div class="invalid-feedback">' +
 __e(o.error_message) +
 '</div>\n                        ';
  } ;
-__p += '\n                    </div>\n                </div>\n                <div class="modal-footer">\n                    <button type="submit" class="btn btn-primary">' +
+__p += '\n                    </div>\n                    <div class="form-group">\n                        <label class="clearfix" for="name">' +
+__e(o.label_nickname) +
+':</label>\n                        <input type="text" name="name" value="' +
+__e(o.nickname) +
+'"\n                               class="form-control ';
+ if (o.error_message) { ;
+__p += ' is-invalid ';
+ } ;
+__p += '"\n                               placeholder="' +
+__e(o.nickname_placeholder) +
+'"/>\n                    </div>\n                </div>\n                <div class="modal-footer">\n                    <button type="submit" class="btn btn-primary">' +
 __e(o.label_add) +
 '</button>\n                </div>\n            </form>\n        </div>\n    </div>\n</div>\n';
 return __p
@@ -48461,6 +48489,522 @@ __e(o.label_search) +
 '</button>\n    </form>\n</li>\n';
 return __p
 };});
+
+/**
+ * Simple, lightweight, usable local autocomplete library for modern browsers
+ * Because there weren’t enough autocomplete scripts in the world? Because I’m completely insane and have NIH syndrome? Probably both. :P
+ * @author Lea Verou http://leaverou.github.io/awesomplete
+ * MIT license
+ */
+
+(function () {
+
+var _ = function (input, o) {
+	var me = this;
+
+	// Setup
+
+	this.isOpened = false;
+
+	this.input = $(input);
+	this.input.setAttribute("autocomplete", "off");
+	this.input.setAttribute("aria-autocomplete", "list");
+
+	o = o || {};
+
+	configure(this, {
+		minChars: 2,
+		maxItems: 10,
+		autoFirst: false,
+		data: _.DATA,
+		filter: _.FILTER_CONTAINS,
+		sort: o.sort === false ? false : _.SORT_BYLENGTH,
+		item: _.ITEM,
+		replace: _.REPLACE
+	}, o);
+
+	this.index = -1;
+
+	// Create necessary elements
+
+	this.container = $.create("div", {
+		className: "awesomplete",
+		around: input
+	});
+
+	this.ul = $.create("ul", {
+		hidden: "hidden",
+		inside: this.container
+	});
+
+	this.status = $.create("span", {
+		className: "visually-hidden",
+		role: "status",
+		"aria-live": "assertive",
+		"aria-relevant": "additions",
+		inside: this.container
+	});
+
+	// Bind events
+
+	this._events = {
+		input: {
+			"input": this.evaluate.bind(this),
+			"blur": this.close.bind(this, { reason: "blur" }),
+			"keydown": function(evt) {
+				var c = evt.keyCode;
+
+				// If the dropdown `ul` is in view, then act on keydown for the following keys:
+				// Enter / Esc / Up / Down
+				if(me.opened) {
+					if (c === 13 && me.selected) { // Enter
+						evt.preventDefault();
+						me.select();
+					}
+					else if (c === 27) { // Esc
+						me.close({ reason: "esc" });
+					}
+					else if (c === 38 || c === 40) { // Down/Up arrow
+						evt.preventDefault();
+						me[c === 38? "previous" : "next"]();
+					}
+				}
+			}
+		},
+		form: {
+			"submit": this.close.bind(this, { reason: "submit" })
+		},
+		ul: {
+			"mousedown": function(evt) {
+				var li = evt.target;
+
+				if (li !== this) {
+
+					while (li && !/li/i.test(li.nodeName)) {
+						li = li.parentNode;
+					}
+
+					if (li && evt.button === 0) {  // Only select on left click
+						evt.preventDefault();
+						me.select(li, evt.target);
+					}
+				}
+			}
+		}
+	};
+
+	$.bind(this.input, this._events.input);
+	$.bind(this.input.form, this._events.form);
+	$.bind(this.ul, this._events.ul);
+
+	if (this.input.hasAttribute("list")) {
+		this.list = "#" + this.input.getAttribute("list");
+		this.input.removeAttribute("list");
+	}
+	else {
+		this.list = this.input.getAttribute("data-list") || o.list || [];
+	}
+
+	_.all.push(this);
+};
+
+_.prototype = {
+	set list(list) {
+		if (Array.isArray(list)) {
+			this._list = list;
+		}
+		else if (typeof list === "string" && list.indexOf(",") > -1) {
+				this._list = list.split(/\s*,\s*/);
+		}
+		else { // Element or CSS selector
+			list = $(list);
+
+			if (list && list.children) {
+				var items = [];
+				slice.apply(list.children).forEach(function (el) {
+					if (!el.disabled) {
+						var text = el.textContent.trim();
+						var value = el.value || text;
+						var label = el.label || text;
+						if (value !== "") {
+							items.push({ label: label, value: value });
+						}
+					}
+				});
+				this._list = items;
+			}
+		}
+
+		if (document.activeElement === this.input) {
+			this.evaluate();
+		}
+	},
+
+	get selected() {
+		return this.index > -1;
+	},
+
+	get opened() {
+		return this.isOpened;
+	},
+
+	close: function (o) {
+		if (!this.opened) {
+			return;
+		}
+
+		this.ul.setAttribute("hidden", "");
+		this.isOpened = false;
+		this.index = -1;
+
+		$.fire(this.input, "awesomplete-close", o || {});
+	},
+
+	open: function () {
+		this.ul.removeAttribute("hidden");
+		this.isOpened = true;
+
+		if (this.autoFirst && this.index === -1) {
+			this.goto(0);
+		}
+
+		$.fire(this.input, "awesomplete-open");
+	},
+
+	destroy: function() {
+		//remove events from the input and its form
+		$.unbind(this.input, this._events.input);
+		$.unbind(this.input.form, this._events.form);
+
+		//move the input out of the awesomplete container and remove the container and its children
+		var parentNode = this.container.parentNode;
+
+		parentNode.insertBefore(this.input, this.container);
+		parentNode.removeChild(this.container);
+
+		//remove autocomplete and aria-autocomplete attributes
+		this.input.removeAttribute("autocomplete");
+		this.input.removeAttribute("aria-autocomplete");
+
+		//remove this awesomeplete instance from the global array of instances
+		var indexOfAwesomplete = _.all.indexOf(this);
+
+		if (indexOfAwesomplete !== -1) {
+			_.all.splice(indexOfAwesomplete, 1);
+		}
+	},
+
+	next: function () {
+		var count = this.ul.children.length;
+		this.goto(this.index < count - 1 ? this.index + 1 : (count ? 0 : -1) );
+	},
+
+	previous: function () {
+		var count = this.ul.children.length;
+		var pos = this.index - 1;
+
+		this.goto(this.selected && pos !== -1 ? pos : count - 1);
+	},
+
+	// Should not be used, highlights specific item without any checks!
+	goto: function (i) {
+		var lis = this.ul.children;
+
+		if (this.selected) {
+			lis[this.index].setAttribute("aria-selected", "false");
+		}
+
+		this.index = i;
+
+		if (i > -1 && lis.length > 0) {
+			lis[i].setAttribute("aria-selected", "true");
+			this.status.textContent = lis[i].textContent;
+
+			// scroll to highlighted element in case parent's height is fixed
+			this.ul.scrollTop = lis[i].offsetTop - this.ul.clientHeight + lis[i].clientHeight;
+
+			$.fire(this.input, "awesomplete-highlight", {
+				text: this.suggestions[this.index]
+			});
+		}
+	},
+
+	select: function (selected, origin) {
+		if (selected) {
+			this.index = $.siblingIndex(selected);
+		} else {
+			selected = this.ul.children[this.index];
+		}
+
+		if (selected) {
+			var suggestion = this.suggestions[this.index];
+
+			var allowed = $.fire(this.input, "awesomplete-select", {
+				text: suggestion,
+				origin: origin || selected
+			});
+
+			if (allowed) {
+				this.replace(suggestion);
+				this.close({ reason: "select" });
+				$.fire(this.input, "awesomplete-selectcomplete", {
+					text: suggestion
+				});
+			}
+		}
+	},
+
+	evaluate: function() {
+		var me = this;
+		var value = this.input.value;
+
+		if (value.length >= this.minChars && this._list.length > 0) {
+			this.index = -1;
+			// Populate list with options that match
+			this.ul.innerHTML = "";
+
+			this.suggestions = this._list
+				.map(function(item) {
+					return new Suggestion(me.data(item, value));
+				})
+				.filter(function(item) {
+					return me.filter(item, value);
+				});
+
+			if (this.sort !== false) {
+				this.suggestions = this.suggestions.sort(this.sort);
+			}
+
+			this.suggestions = this.suggestions.slice(0, this.maxItems);
+
+			this.suggestions.forEach(function(text) {
+					me.ul.appendChild(me.item(text, value));
+				});
+
+			if (this.ul.children.length === 0) {
+				this.close({ reason: "nomatches" });
+			} else {
+				this.open();
+			}
+		}
+		else {
+			this.close({ reason: "nomatches" });
+		}
+	}
+};
+
+// Static methods/properties
+
+_.all = [];
+
+_.FILTER_CONTAINS = function (text, input) {
+	return RegExp($.regExpEscape(input.trim()), "i").test(text);
+};
+
+_.FILTER_STARTSWITH = function (text, input) {
+	return RegExp("^" + $.regExpEscape(input.trim()), "i").test(text);
+};
+
+_.SORT_BYLENGTH = function (a, b) {
+	if (a.length !== b.length) {
+		return a.length - b.length;
+	}
+
+	return a < b? -1 : 1;
+};
+
+_.ITEM = function (text, input) {
+    input = input.trim();
+    var element = document.createElement("li");
+    element.setAttribute("aria-selected", "false");
+
+    var regex = new RegExp("("+input+")", "ig");
+    var parts = input ? text.split(regex) : [text];
+    parts.forEach(function (txt) {
+        if (input && txt.match(regex)) {
+            var match = document.createElement("mark");
+            match.textContent = txt;
+            element.appendChild(match);
+        } else {
+            element.appendChild(document.createTextNode(txt));
+        }
+    });
+    return element;
+};
+
+_.REPLACE = function (text) {
+	this.input.value = text.value;
+};
+
+_.DATA = function (item/*, input*/) { return item; };
+
+// Private functions
+
+function Suggestion(data) {
+	var o = Array.isArray(data)
+	  ? { label: data[0], value: data[1] }
+	  : typeof data === "object" && "label" in data && "value" in data ? data : { label: data, value: data };
+
+	this.label = o.label || o.value;
+	this.value = o.value;
+}
+Object.defineProperty(Suggestion.prototype = Object.create(String.prototype), "length", {
+	get: function() { return this.label.length; }
+});
+Suggestion.prototype.toString = Suggestion.prototype.valueOf = function () {
+	return "" + this.label;
+};
+
+function configure(instance, properties, o) {
+	for (var i in properties) {
+		var initial = properties[i],
+		    attrValue = instance.input.getAttribute("data-" + i.toLowerCase());
+
+		if (typeof initial === "number") {
+			instance[i] = parseInt(attrValue);
+		}
+		else if (initial === false) { // Boolean options must be false by default anyway
+			instance[i] = attrValue !== null;
+		}
+		else if (initial instanceof Function) {
+			instance[i] = null;
+		}
+		else {
+			instance[i] = attrValue;
+		}
+
+		if (!instance[i] && instance[i] !== 0) {
+			instance[i] = (i in o)? o[i] : initial;
+		}
+	}
+}
+
+// Helpers
+
+var slice = Array.prototype.slice;
+
+function $(expr, con) {
+	return typeof expr === "string"? (con || document).querySelector(expr) : expr || null;
+}
+
+function $$(expr, con) {
+	return slice.call((con || document).querySelectorAll(expr));
+}
+
+$.create = function(tag, o) {
+	var element = document.createElement(tag);
+
+	for (var i in o) {
+		var val = o[i];
+
+		if (i === "inside") {
+			$(val).appendChild(element);
+		}
+		else if (i === "around") {
+			var ref = $(val);
+			ref.parentNode.insertBefore(element, ref);
+			element.appendChild(ref);
+		}
+		else if (i in element) {
+			element[i] = val;
+		}
+		else {
+			element.setAttribute(i, val);
+		}
+	}
+
+	return element;
+};
+
+$.bind = function(element, o) {
+	if (element) {
+		for (var event in o) {
+			var callback = o[event];
+
+			event.split(/\s+/).forEach(function (event) {
+				element.addEventListener(event, callback);
+			});
+		}
+	}
+};
+
+$.unbind = function(element, o) {
+	if (element) {
+		for (var event in o) {
+			var callback = o[event];
+
+			event.split(/\s+/).forEach(function(event) {
+				element.removeEventListener(event, callback);
+			});
+		}
+	}
+};
+
+$.fire = function(target, type, properties) {
+	var evt = document.createEvent("HTMLEvents");
+
+	evt.initEvent(type, true, true );
+
+	for (var j in properties) {
+		evt[j] = properties[j];
+	}
+
+	return target.dispatchEvent(evt);
+};
+
+$.regExpEscape = function (s) {
+	return s.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&");
+};
+
+$.siblingIndex = function (el) {
+	/* eslint-disable no-cond-assign */
+	for (var i = 0; el = el.previousElementSibling; i++);
+	return i;
+};
+
+// Initialization
+
+function init() {
+	$$("input.awesomplete").forEach(function (input) {
+		new _(input);
+	});
+}
+
+// Are we in a browser? Check for Document constructor
+if (typeof Document !== "undefined") {
+	// DOM already loaded?
+	if (document.readyState !== "loading") {
+		init();
+	}
+	else {
+		// Wait for it
+		document.addEventListener("DOMContentLoaded", init);
+	}
+}
+
+_.$ = $;
+_.$$ = $$;
+
+// Make sure to export Awesomplete on self when in a browser
+if (typeof self !== "undefined") {
+	self.Awesomplete = _;
+}
+
+// Expose Awesomplete as a CJS module
+if (typeof module === "object" && module.exports) {
+	module.exports = _;
+}
+
+return _;
+
+}());
+
+define("awesomplete", (function (global) {
+    return function () {
+        var ret, fn;
+        return ret || global.Awesomplete;
+    };
+}(this)));
 
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define('snabbdom',[],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.snabbdom = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
@@ -49502,8 +50046,8 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
 /*global define */
 (function (root, factory) {
-  define('converse-rosterview',["converse-core", "tpl!add_contact_modal", "tpl!group_header", "tpl!pending_contact", "tpl!requesting_contact", "tpl!roster", "tpl!roster_filter", "tpl!roster_item", "tpl!search_contact", "converse-chatboxes", "converse-modal"], factory);
-})(void 0, function (converse, tpl_add_contact_modal, tpl_group_header, tpl_pending_contact, tpl_requesting_contact, tpl_roster, tpl_roster_filter, tpl_roster_item, tpl_search_contact) {
+  define('converse-rosterview',["converse-core", "tpl!add_contact_modal", "tpl!group_header", "tpl!pending_contact", "tpl!requesting_contact", "tpl!roster", "tpl!roster_filter", "tpl!roster_item", "tpl!search_contact", "awesomplete", "converse-chatboxes", "converse-modal"], factory);
+})(void 0, function (converse, tpl_add_contact_modal, tpl_group_header, tpl_pending_contact, tpl_requesting_contact, tpl_roster, tpl_roster_filter, tpl_roster_item, tpl_search_contact, Awesomplete) {
   "use strict";
 
   var _converse$env = converse.env,
@@ -49552,9 +50096,10 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           __ = _converse.__;
 
       _converse.api.settings.update({
-        allow_chat_pending_contacts: true,
-        allow_contact_removal: true,
-        show_toolbar: true
+        'allow_chat_pending_contacts': true,
+        'allow_contact_removal': true,
+        'show_toolbar': true,
+        'xhr_user_search_url': null
       });
 
       _converse.api.promises.add('rosterViewInitialized');
@@ -49613,8 +50158,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 
       _converse.AddContactModal = _converse.BootstrapModal.extend({
         events: {
-          'submit form': 'addContactFromForm',
-          'submit form.search-xmpp-contact': 'searchContacts'
+          'submit form': 'addContactFromForm'
         },
         initialize: function initialize() {
           _converse.BootstrapModal.prototype.initialize.apply(this, arguments);
@@ -49622,18 +50166,81 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
           this.model.on('change', this.render, this);
         },
         toHTML: function toHTML() {
+          var label_nickname = _converse.xhr_user_search_url ? __('Contact name') : __('Optional nickname');
           return tpl_add_contact_modal(_.extend(this.model.toJSON(), {
+            '_converse': _converse,
             'heading_new_contact': __('Add a Contact'),
             'label_xmpp_address': __('XMPP Address'),
-            'label_nickname': __('Optional nickname'),
+            'label_nickname': label_nickname,
             'contact_placeholder': __('name@example.org'),
             'label_add': __('Add')
           }));
         },
+        afterRender: function afterRender() {
+          if (_converse.xhr_user_search_url && _.isString(_converse.xhr_user_search_url)) {
+            this.initXHRAutoComplete();
+          } else {
+            this.initJIDAutoComplete();
+          }
+        },
+        initJIDAutoComplete: function initJIDAutoComplete() {
+          var jid_input = this.el.querySelector('input[name="jid"]');
+
+          var list = _.uniq(_converse.roster.map(function (item) {
+            return Strophe.getDomainFromJid(item.get('jid'));
+          }));
+
+          new Awesomplete(jid_input, {
+            'list': list,
+            'data': function data(text, input) {
+              return input.slice(0, input.indexOf("@")) + "@" + text;
+            },
+            'filter': Awesomplete.FILTER_STARTSWITH
+          });
+          this.el.addEventListener('shown.bs.modal', function () {
+            jid_input.focus();
+          }, false);
+        },
+        initXHRAutoComplete: function initXHRAutoComplete() {
+          var name_input = this.el.querySelector('input[name="name"]');
+          var jid_input = this.el.querySelector('input[name="jid"]');
+          var awesomplete = new Awesomplete(name_input, {
+            'minChars': 1,
+            'list': []
+          });
+          var xhr = new window.XMLHttpRequest(); // `open` must be called after `onload` for mock/testing purposes.
+
+          xhr.onload = function () {
+            if (xhr.responseText) {
+              awesomplete.list = JSON.parse(xhr.responseText).map(function (i) {
+                //eslint-disable-line arrow-body-style
+                return {
+                  'label': i.fullname,
+                  'value': i.jid
+                };
+              });
+              awesomplete.evaluate();
+            }
+          };
+
+          name_input.addEventListener('input', _.debounce(function () {
+            xhr.open("GET", "".concat(_converse.xhr_user_search_url, "?q=").concat(name_input.value), true);
+            xhr.send();
+          }, 300));
+          this.el.addEventListener('awesomplete-selectcomplete', function (ev) {
+            jid_input.value = ev.text.value;
+            name_input.value = ev.text.label;
+          });
+          this.el.addEventListener('shown.bs.modal', function () {
+            name_input.focus();
+          }, false);
+        },
         addContactFromForm: function addContactFromForm(ev) {
           ev.preventDefault();
           var data = new FormData(ev.target),
-              jid = data.get('jid');
+              jid = data.get('jid'),
+              name = data.get('name');
+          ev.target.reset();
 
           if (!jid || _.compact(jid.split('@')).length < 2) {
             this.model.set({
@@ -49641,7 +50248,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
               'jid': jid
             });
           } else {
-            _converse.roster.addAndSubscribe(jid);
+            _converse.roster.addAndSubscribe(jid, name);
 
             this.model.clear();
             this.modal.hide();
@@ -50302,6 +50909,7 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
         onContactAdded: function onContactAdded(contact) {
           this.addRosterContact(contact).update();
           this.updateFilter();
+          this.sortAndPositionAllItems();
         },
         onContactChange: function onContactChange(contact) {
           this.updateChatBox(contact).update();
@@ -50976,6 +51584,13 @@ return __p
             'placeholder_status_message': __('Personal status message')
           }));
         },
+        afterRender: function afterRender() {
+          var _this = this;
+
+          this.el.addEventListener('shown.bs.modal', function () {
+            _this.el.querySelector('input[name="status_message"]').focus();
+          }, false);
+        },
         clearStatusMessage: function clearStatusMessage(ev) {
           if (ev && ev.preventDefault) {
             ev.preventDefault();
@@ -51587,7 +52202,7 @@ return __p
           // artifacts (i.e. on page load the toggle is shown only to then
           // seconds later be hidden in favor of the control box).
           this.el.innerHTML = tpl_controlbox_toggle({
-            'label_toggle': _converse.connection.connected ? __('Contacts') : __('Toggle chat')
+            'label_toggle': _converse.connection.connected ? __('Chat Contacts') : __('Toggle chat')
           });
           return this;
         },
@@ -55143,15 +55758,15 @@ __e( o.Strophe.getDomainFromJid(o.jid) ) +
  } ;
 __p += '\n        <p class="chatroom-description">' +
 __e( o.description ) +
-'<p/>\n    </div>\n</div>\n<div class="col-sm-3 col-lg-2">\n    <div class="chatbox-buttons row no-gutters">\n        <a class="chatbox-btn close-chatbox-button fa fa-sign-out" title="' +
+'<p/>\n    </div>\n</div>\n<div class="chatbox-buttons row no-gutters">\n    <a class="chatbox-btn close-chatbox-button fa fa-sign-out" title="' +
 __e(o.info_close) +
-'"></a>\n        ';
+'"></a>\n    ';
  if (o.affiliation == 'owner') { ;
-__p += '\n        <a class="chatbox-btn configure-chatroom-button fa fa-wrench" title="' +
+__p += '\n    <a class="chatbox-btn configure-chatroom-button fa fa-wrench" title="' +
 __e(o.info_configure) +
-' "></a>\n        ';
+' "></a>\n    ';
  } ;
-__p += '\n    </div>\n</div>\n\n';
+__p += '\n</div>\n';
 return __p
 };});
 
@@ -55161,7 +55776,7 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 __p += '<form class="room-invite">\n    ';
  if (o.error_message) { ;
-__p += '\n        <span class="pure-form-message error">' +
+__p += '\n        <span class="error">' +
 __e(o.error_message) +
 '</span>\n    ';
  } ;
@@ -55231,12 +55846,6 @@ __e(o.label_hide_occupants) +
 '"></li>\n';
  } ;
 __p += '\n';
- if (o.show_clear_button)  { ;
-__p += '\n<li class="toggle-clear right fa fa-eraser" title="' +
-__e(o.label_clear) +
-'"></li>\n';
- } ;
-__p += '\n\n';
 return __p
 };});
 
@@ -55438,525 +56047,9 @@ define('tpl!rooms_results', ['lodash'], function(_) {return function(o) {
 var __t, __p = '', __e = _.escape;
 __p += '<li class="list-group-item active">' +
 __e( o.feedback_text ) +
-':</dt>\n';
+'</dt>\n';
 return __p
 };});
-
-/**
- * Simple, lightweight, usable local autocomplete library for modern browsers
- * Because there weren’t enough autocomplete scripts in the world? Because I’m completely insane and have NIH syndrome? Probably both. :P
- * @author Lea Verou http://leaverou.github.io/awesomplete
- * MIT license
- */
-
-(function () {
-
-var _ = function (input, o) {
-	var me = this;
-
-	// Setup
-
-	this.isOpened = false;
-
-	this.input = $(input);
-	this.input.setAttribute("autocomplete", "off");
-	this.input.setAttribute("aria-autocomplete", "list");
-
-	o = o || {};
-
-	configure(this, {
-		minChars: 2,
-		maxItems: 10,
-		autoFirst: false,
-		data: _.DATA,
-		filter: _.FILTER_CONTAINS,
-		sort: o.sort === false ? false : _.SORT_BYLENGTH,
-		item: _.ITEM,
-		replace: _.REPLACE
-	}, o);
-
-	this.index = -1;
-
-	// Create necessary elements
-
-	this.container = $.create("div", {
-		className: "awesomplete",
-		around: input
-	});
-
-	this.ul = $.create("ul", {
-		hidden: "hidden",
-		inside: this.container
-	});
-
-	this.status = $.create("span", {
-		className: "visually-hidden",
-		role: "status",
-		"aria-live": "assertive",
-		"aria-relevant": "additions",
-		inside: this.container
-	});
-
-	// Bind events
-
-	this._events = {
-		input: {
-			"input": this.evaluate.bind(this),
-			"blur": this.close.bind(this, { reason: "blur" }),
-			"keydown": function(evt) {
-				var c = evt.keyCode;
-
-				// If the dropdown `ul` is in view, then act on keydown for the following keys:
-				// Enter / Esc / Up / Down
-				if(me.opened) {
-					if (c === 13 && me.selected) { // Enter
-						evt.preventDefault();
-						me.select();
-					}
-					else if (c === 27) { // Esc
-						me.close({ reason: "esc" });
-					}
-					else if (c === 38 || c === 40) { // Down/Up arrow
-						evt.preventDefault();
-						me[c === 38? "previous" : "next"]();
-					}
-				}
-			}
-		},
-		form: {
-			"submit": this.close.bind(this, { reason: "submit" })
-		},
-		ul: {
-			"mousedown": function(evt) {
-				var li = evt.target;
-
-				if (li !== this) {
-
-					while (li && !/li/i.test(li.nodeName)) {
-						li = li.parentNode;
-					}
-
-					if (li && evt.button === 0) {  // Only select on left click
-						evt.preventDefault();
-						me.select(li, evt.target);
-					}
-				}
-			}
-		}
-	};
-
-	$.bind(this.input, this._events.input);
-	$.bind(this.input.form, this._events.form);
-	$.bind(this.ul, this._events.ul);
-
-	if (this.input.hasAttribute("list")) {
-		this.list = "#" + this.input.getAttribute("list");
-		this.input.removeAttribute("list");
-	}
-	else {
-		this.list = this.input.getAttribute("data-list") || o.list || [];
-	}
-
-	_.all.push(this);
-};
-
-_.prototype = {
-	set list(list) {
-		if (Array.isArray(list)) {
-			this._list = list;
-		}
-		else if (typeof list === "string" && list.indexOf(",") > -1) {
-				this._list = list.split(/\s*,\s*/);
-		}
-		else { // Element or CSS selector
-			list = $(list);
-
-			if (list && list.children) {
-				var items = [];
-				slice.apply(list.children).forEach(function (el) {
-					if (!el.disabled) {
-						var text = el.textContent.trim();
-						var value = el.value || text;
-						var label = el.label || text;
-						if (value !== "") {
-							items.push({ label: label, value: value });
-						}
-					}
-				});
-				this._list = items;
-			}
-		}
-
-		if (document.activeElement === this.input) {
-			this.evaluate();
-		}
-	},
-
-	get selected() {
-		return this.index > -1;
-	},
-
-	get opened() {
-		return this.isOpened;
-	},
-
-	close: function (o) {
-		if (!this.opened) {
-			return;
-		}
-
-		this.ul.setAttribute("hidden", "");
-		this.isOpened = false;
-		this.index = -1;
-
-		$.fire(this.input, "awesomplete-close", o || {});
-	},
-
-	open: function () {
-		this.ul.removeAttribute("hidden");
-		this.isOpened = true;
-
-		if (this.autoFirst && this.index === -1) {
-			this.goto(0);
-		}
-
-		$.fire(this.input, "awesomplete-open");
-	},
-
-	destroy: function() {
-		//remove events from the input and its form
-		$.unbind(this.input, this._events.input);
-		$.unbind(this.input.form, this._events.form);
-
-		//move the input out of the awesomplete container and remove the container and its children
-		var parentNode = this.container.parentNode;
-
-		parentNode.insertBefore(this.input, this.container);
-		parentNode.removeChild(this.container);
-
-		//remove autocomplete and aria-autocomplete attributes
-		this.input.removeAttribute("autocomplete");
-		this.input.removeAttribute("aria-autocomplete");
-
-		//remove this awesomeplete instance from the global array of instances
-		var indexOfAwesomplete = _.all.indexOf(this);
-
-		if (indexOfAwesomplete !== -1) {
-			_.all.splice(indexOfAwesomplete, 1);
-		}
-	},
-
-	next: function () {
-		var count = this.ul.children.length;
-		this.goto(this.index < count - 1 ? this.index + 1 : (count ? 0 : -1) );
-	},
-
-	previous: function () {
-		var count = this.ul.children.length;
-		var pos = this.index - 1;
-
-		this.goto(this.selected && pos !== -1 ? pos : count - 1);
-	},
-
-	// Should not be used, highlights specific item without any checks!
-	goto: function (i) {
-		var lis = this.ul.children;
-
-		if (this.selected) {
-			lis[this.index].setAttribute("aria-selected", "false");
-		}
-
-		this.index = i;
-
-		if (i > -1 && lis.length > 0) {
-			lis[i].setAttribute("aria-selected", "true");
-			this.status.textContent = lis[i].textContent;
-
-			// scroll to highlighted element in case parent's height is fixed
-			this.ul.scrollTop = lis[i].offsetTop - this.ul.clientHeight + lis[i].clientHeight;
-
-			$.fire(this.input, "awesomplete-highlight", {
-				text: this.suggestions[this.index]
-			});
-		}
-	},
-
-	select: function (selected, origin) {
-		if (selected) {
-			this.index = $.siblingIndex(selected);
-		} else {
-			selected = this.ul.children[this.index];
-		}
-
-		if (selected) {
-			var suggestion = this.suggestions[this.index];
-
-			var allowed = $.fire(this.input, "awesomplete-select", {
-				text: suggestion,
-				origin: origin || selected
-			});
-
-			if (allowed) {
-				this.replace(suggestion);
-				this.close({ reason: "select" });
-				$.fire(this.input, "awesomplete-selectcomplete", {
-					text: suggestion
-				});
-			}
-		}
-	},
-
-	evaluate: function() {
-		var me = this;
-		var value = this.input.value;
-
-		if (value.length >= this.minChars && this._list.length > 0) {
-			this.index = -1;
-			// Populate list with options that match
-			this.ul.innerHTML = "";
-
-			this.suggestions = this._list
-				.map(function(item) {
-					return new Suggestion(me.data(item, value));
-				})
-				.filter(function(item) {
-					return me.filter(item, value);
-				});
-
-			if (this.sort !== false) {
-				this.suggestions = this.suggestions.sort(this.sort);
-			}
-
-			this.suggestions = this.suggestions.slice(0, this.maxItems);
-
-			this.suggestions.forEach(function(text) {
-					me.ul.appendChild(me.item(text, value));
-				});
-
-			if (this.ul.children.length === 0) {
-				this.close({ reason: "nomatches" });
-			} else {
-				this.open();
-			}
-		}
-		else {
-			this.close({ reason: "nomatches" });
-		}
-	}
-};
-
-// Static methods/properties
-
-_.all = [];
-
-_.FILTER_CONTAINS = function (text, input) {
-	return RegExp($.regExpEscape(input.trim()), "i").test(text);
-};
-
-_.FILTER_STARTSWITH = function (text, input) {
-	return RegExp("^" + $.regExpEscape(input.trim()), "i").test(text);
-};
-
-_.SORT_BYLENGTH = function (a, b) {
-	if (a.length !== b.length) {
-		return a.length - b.length;
-	}
-
-	return a < b? -1 : 1;
-};
-
-_.ITEM = function (text, input) {
-    input = input.trim();
-    var element = document.createElement("li");
-    element.setAttribute("aria-selected", "false");
-
-    var regex = new RegExp("("+input+")", "ig");
-    var parts = input ? text.split(regex) : [text];
-    parts.forEach(function (txt) {
-        if (input && txt.match(regex)) {
-            var match = document.createElement("mark");
-            match.textContent = txt;
-            element.appendChild(match);
-        } else {
-            element.appendChild(document.createTextNode(txt));
-        }
-    });
-    return element;
-};
-
-_.REPLACE = function (text) {
-	this.input.value = text.value;
-};
-
-_.DATA = function (item/*, input*/) { return item; };
-
-// Private functions
-
-function Suggestion(data) {
-	var o = Array.isArray(data)
-	  ? { label: data[0], value: data[1] }
-	  : typeof data === "object" && "label" in data && "value" in data ? data : { label: data, value: data };
-
-	this.label = o.label || o.value;
-	this.value = o.value;
-}
-Object.defineProperty(Suggestion.prototype = Object.create(String.prototype), "length", {
-	get: function() { return this.label.length; }
-});
-Suggestion.prototype.toString = Suggestion.prototype.valueOf = function () {
-	return "" + this.label;
-};
-
-function configure(instance, properties, o) {
-	for (var i in properties) {
-		var initial = properties[i],
-		    attrValue = instance.input.getAttribute("data-" + i.toLowerCase());
-
-		if (typeof initial === "number") {
-			instance[i] = parseInt(attrValue);
-		}
-		else if (initial === false) { // Boolean options must be false by default anyway
-			instance[i] = attrValue !== null;
-		}
-		else if (initial instanceof Function) {
-			instance[i] = null;
-		}
-		else {
-			instance[i] = attrValue;
-		}
-
-		if (!instance[i] && instance[i] !== 0) {
-			instance[i] = (i in o)? o[i] : initial;
-		}
-	}
-}
-
-// Helpers
-
-var slice = Array.prototype.slice;
-
-function $(expr, con) {
-	return typeof expr === "string"? (con || document).querySelector(expr) : expr || null;
-}
-
-function $$(expr, con) {
-	return slice.call((con || document).querySelectorAll(expr));
-}
-
-$.create = function(tag, o) {
-	var element = document.createElement(tag);
-
-	for (var i in o) {
-		var val = o[i];
-
-		if (i === "inside") {
-			$(val).appendChild(element);
-		}
-		else if (i === "around") {
-			var ref = $(val);
-			ref.parentNode.insertBefore(element, ref);
-			element.appendChild(ref);
-		}
-		else if (i in element) {
-			element[i] = val;
-		}
-		else {
-			element.setAttribute(i, val);
-		}
-	}
-
-	return element;
-};
-
-$.bind = function(element, o) {
-	if (element) {
-		for (var event in o) {
-			var callback = o[event];
-
-			event.split(/\s+/).forEach(function (event) {
-				element.addEventListener(event, callback);
-			});
-		}
-	}
-};
-
-$.unbind = function(element, o) {
-	if (element) {
-		for (var event in o) {
-			var callback = o[event];
-
-			event.split(/\s+/).forEach(function(event) {
-				element.removeEventListener(event, callback);
-			});
-		}
-	}
-};
-
-$.fire = function(target, type, properties) {
-	var evt = document.createEvent("HTMLEvents");
-
-	evt.initEvent(type, true, true );
-
-	for (var j in properties) {
-		evt[j] = properties[j];
-	}
-
-	return target.dispatchEvent(evt);
-};
-
-$.regExpEscape = function (s) {
-	return s.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&");
-};
-
-$.siblingIndex = function (el) {
-	/* eslint-disable no-cond-assign */
-	for (var i = 0; el = el.previousElementSibling; i++);
-	return i;
-};
-
-// Initialization
-
-function init() {
-	$$("input.awesomplete").forEach(function (input) {
-		new _(input);
-	});
-}
-
-// Are we in a browser? Check for Document constructor
-if (typeof Document !== "undefined") {
-	// DOM already loaded?
-	if (document.readyState !== "loading") {
-		init();
-	}
-	else {
-		// Wait for it
-		document.addEventListener("DOMContentLoaded", init);
-	}
-}
-
-_.$ = $;
-_.$$ = $$;
-
-// Make sure to export Awesomplete on self when in a browser
-if (typeof self !== "undefined") {
-	self.Awesomplete = _;
-}
-
-// Expose Awesomplete as a CJS module
-if (typeof module === "object" && module.exports) {
-	module.exports = _;
-}
-
-return _;
-
-}());
-
-define("awesomplete", (function (global) {
-    return function () {
-        var ret, fn;
-        return ret || global.Awesomplete;
-    };
-}(this)));
 
 
 
@@ -56152,6 +56245,13 @@ define("awesomplete", (function (global) {
             'server_placeholder': __('conference.example.org')
           }));
         },
+        afterRender: function afterRender() {
+          var _this = this;
+
+          this.el.addEventListener('shown.bs.modal', function () {
+            _this.el.querySelector('input[name="server"]').focus();
+          }, false);
+        },
         openRoom: function openRoom(ev) {
           ev.preventDefault();
           var jid = ev.target.getAttribute('data-room-jid');
@@ -56193,7 +56293,7 @@ define("awesomplete", (function (global) {
           chatrooms_el.innerHTML = tpl_rooms_results({
             'feedback_text': __('No rooms found')
           });
-          var input_el = this.el.querySelector('input#show-rooms');
+          var input_el = this.el.querySelector('input[name="server"]');
           input_el.classList.remove('hidden');
           this.removeSpinner();
         },
@@ -56208,7 +56308,7 @@ define("awesomplete", (function (global) {
             // For translators: %1$s is a variable and will be
             // replaced with the XMPP server name
             available_chatrooms.innerHTML = tpl_rooms_results({
-              'feedback_text': __('Rooms found')
+              'feedback_text': __('Rooms found:')
             });
             var fragment = document.createDocumentFragment();
 
@@ -56267,6 +56367,13 @@ define("awesomplete", (function (global) {
             'label_join': __('Join')
           }));
         },
+        afterRender: function afterRender() {
+          var _this2 = this;
+
+          this.el.addEventListener('shown.bs.modal', function () {
+            _this2.el.querySelector('input[name="chatroom"]').focus();
+          }, false);
+        },
         parseRoomDataFromEvent: function parseRoomDataFromEvent(form) {
           var data = new FormData(form);
           var jid = data.get('chatroom');
@@ -56309,7 +56416,7 @@ define("awesomplete", (function (global) {
           'click .send-button': 'onFormSubmitted'
         },
         initialize: function initialize() {
-          var _this = this;
+          var _this3 = this;
 
           this.scrollDown = _.debounce(this._scrollDown, 250);
           this.markScrolled = _.debounce(this._markScrolled, 100);
@@ -56328,11 +56435,11 @@ define("awesomplete", (function (global) {
 
           if (this.model.get('connection_status') !== converse.ROOMSTATUS.ENTERED) {
             var handler = function handler() {
-              _this.join();
+              _this3.join();
 
-              _this.fetchMessages();
+              _this3.fetchMessages();
 
-              _converse.emit('chatRoomOpened', _this);
+              _converse.emit('chatRoomOpened', _this3);
             };
 
             this.getRoomFeatures().then(handler, handler);
@@ -56701,7 +56808,7 @@ define("awesomplete", (function (global) {
           return _.flatMap(arguments[0], this.parseMemberListIQ);
         },
         getJidsWithAffiliations: function getJidsWithAffiliations(affiliations) {
-          var _this2 = this;
+          var _this4 = this;
 
           /* Returns a map of JIDs that have the affiliations
            * as provided.
@@ -56711,13 +56818,13 @@ define("awesomplete", (function (global) {
           }
 
           return new Promise(function (resolve, reject) {
-            var promises = _.map(affiliations, _.partial(_this2.requestMemberList, _this2.model.get('jid')));
+            var promises = _.map(affiliations, _.partial(_this4.requestMemberList, _this4.model.get('jid')));
 
-            Promise.all(promises).then(_.flow(_this2.marshallAffiliationIQs.bind(_this2), resolve), _.flow(_this2.marshallAffiliationIQs.bind(_this2), resolve));
+            Promise.all(promises).then(_.flow(_this4.marshallAffiliationIQs.bind(_this4), resolve), _.flow(_this4.marshallAffiliationIQs.bind(_this4), resolve));
           });
         },
         updateMemberLists: function updateMemberLists(members, affiliations, deltaFunc) {
-          var _this3 = this;
+          var _this5 = this;
 
           /* Fetch the lists of users with the given affiliations.
            * Then compute the delta between those users and
@@ -56737,7 +56844,7 @@ define("awesomplete", (function (global) {
            *  to update the list.
            */
           this.getJidsWithAffiliations(affiliations).then(function (old_members) {
-            _this3.setAffiliations(deltaFunc(members, old_members));
+            _this5.setAffiliations(deltaFunc(members, old_members));
           });
         },
         directInvite: function directInvite(recipient, reason) {
@@ -57214,7 +57321,7 @@ define("awesomplete", (function (global) {
           _converse.ChatBoxView.prototype.close.apply(this, arguments);
         },
         renderConfigurationForm: function renderConfigurationForm(stanza) {
-          var _this4 = this;
+          var _this6 = this;
 
           /* Renders a form given an IQ stanza containing the current
            * room configuration.
@@ -57259,12 +57366,12 @@ define("awesomplete", (function (global) {
           last_fieldset_el.querySelector('input[type=button]').addEventListener('click', function (ev) {
             ev.preventDefault();
 
-            _this4.closeForm();
+            _this6.closeForm();
           });
           form_el.addEventListener('submit', function (ev) {
             ev.preventDefault();
 
-            _this4.saveConfiguration(ev.target).then(_this4.getRoomFeatures.bind(_this4));
+            _this6.saveConfiguration(ev.target).then(_this6.getRoomFeatures.bind(_this6));
           }, false);
         },
         sendConfiguration: function sendConfiguration(config, onSuccess, onError) {
@@ -57300,7 +57407,7 @@ define("awesomplete", (function (global) {
           return _converse.connection.sendIQ(iq, onSuccess, onError);
         },
         saveConfiguration: function saveConfiguration(form) {
-          var _this5 = this;
+          var _this7 = this;
 
           /* Submit the room configuration form by sending an IQ
            * stanza to the server.
@@ -57315,13 +57422,13 @@ define("awesomplete", (function (global) {
             var inputs = form ? sizzle(':input:not([type=button]):not([type=submit])', form) : [],
                 configArray = _.map(inputs, u.webForm2xForm);
 
-            _this5.sendConfiguration(configArray, resolve, reject);
+            _this7.sendConfiguration(configArray, resolve, reject);
 
-            _this5.closeForm();
+            _this7.closeForm();
           });
         },
         autoConfigureChatRoom: function autoConfigureChatRoom() {
-          var _this6 = this;
+          var _this8 = this;
 
           /* Automatically configure room based on the
            * 'roomconfig' data on this view's model.
@@ -57335,7 +57442,7 @@ define("awesomplete", (function (global) {
            */
           var that = this;
           return new Promise(function (resolve, reject) {
-            _this6.fetchRoomConfiguration().then(function (stanza) {
+            _this8.fetchRoomConfiguration().then(function (stanza) {
               var configArray = [],
                   fields = stanza.querySelectorAll('field'),
                   config = that.model.get('roomconfig');
@@ -57381,7 +57488,7 @@ define("awesomplete", (function (global) {
           this.renderAfterTransition();
         },
         fetchRoomConfiguration: function fetchRoomConfiguration(handler) {
-          var _this7 = this,
+          var _this9 = this,
               _arguments = arguments;
 
           /* Send an IQ stanza to fetch the room configuration data.
@@ -57393,13 +57500,13 @@ define("awesomplete", (function (global) {
            */
           return new Promise(function (resolve, reject) {
             _converse.connection.sendIQ($iq({
-              'to': _this7.model.get('jid'),
+              'to': _this9.model.get('jid'),
               'type': "get"
             }).c("query", {
               xmlns: Strophe.NS.MUC_OWNER
             }), function (iq) {
               if (handler) {
-                handler.apply(_this7, _arguments);
+                handler.apply(_this9, _arguments);
               }
 
               resolve(iq);
@@ -57451,13 +57558,13 @@ define("awesomplete", (function (global) {
           this.model.save(features);
         },
         getRoomFeatures: function getRoomFeatures() {
-          var _this8 = this;
+          var _this10 = this;
 
           /* Fetch the room disco info, parse it and then
            * save it on the Backbone.Model of this chat rooms.
            */
           return new Promise(function (resolve, reject) {
-            _converse.connection.disco.info(_this8.model.get('jid'), null, _.flow(_this8.parseRoomFeatures.bind(_this8), resolve), function () {
+            _converse.connection.disco.info(_this10.model.get('jid'), null, _.flow(_this10.parseRoomFeatures.bind(_this10), resolve), function () {
               reject(new Error("Could not parse the room features"));
             }, 5000);
           });
@@ -57755,7 +57862,7 @@ define("awesomplete", (function (global) {
           return notification;
         },
         displayNotificationsforUser: function displayNotificationsforUser(notification) {
-          var _this9 = this;
+          var _this11 = this;
 
           /* Given the notification object generated by
            * parseXUserElement, display any relevant messages and
@@ -57777,7 +57884,7 @@ define("awesomplete", (function (global) {
           }
 
           _.each(notification.messages, function (message) {
-            _this9.content.insertAdjacentHTML('beforeend', tpl_info({
+            _this11.content.insertAdjacentHTML('beforeend', tpl_info({
               'data': '',
               'isodate': moment().format(),
               'extra_classes': 'chat-event',
