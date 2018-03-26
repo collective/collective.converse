@@ -4,6 +4,8 @@ Introduction
 ``collective.converse`` integrates `converse.js <https://conversejs>`_ and the
 `Prosody <https://prosody.im>`_ XMPP server into `Plone <https://plone.com>`_.
 
+.. image:: https://raw.githubusercontent.com/collective/collective.converse/master/images/screenshot.png
+
 Installation
 ============
 
