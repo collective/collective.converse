@@ -5,6 +5,7 @@
                         credentials_url view/credentials_url;
                         debug view/debug;
                         jid view/jid;
+                        nickname view/nickname;
                         lang view/lang;
                         navigation_root_url view/navigation_root_url;
                         xhr_user_search_url view/xhr_user_search_url"></span>
@@ -46,6 +47,7 @@
                 'auto_subscribe': chatdata.getAttribute('auto_subscribe') === "True",
                 'bosh_service_url': chatdata.getAttribute('bosh_url'),
                 'connection_options': {'mechanisms': [Strophe.SASL_X_TOKEN]},
+                'nickname': chatdata.getAttribute('nickname'),
                 'credentials_url': chatdata.getAttribute('credentials_url'),
                 'debug': chatdata.getAttribute('debug') === "True",
                 'hide_muc_server': true,

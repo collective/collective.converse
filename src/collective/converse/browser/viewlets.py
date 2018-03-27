@@ -4,6 +4,7 @@ from Products.CMFCore.utils import getToolByName
 from plone.app.layout.navigation.root import getNavigationRoot
 from plone.app.layout.viewlets.common import ViewletBase
 from collective.converse.interfaces import IXMPPSettings
+import plone.api
 
 
 class InitializationViewlet(ViewletBase):
@@ -26,6 +27,9 @@ class InitializationViewlet(ViewletBase):
         self.debug = settings.auto_subscribe
         self.credentials_url = '{}/@@xmpp-credentials'.format(root)
         self.xhr_user_search_url = '{}/@@search-users'.format(root)
+
+        user = plone.api.user.get_current()
+        self.nickname = user.getProperty('fullname')
 
         pstate = component.getMultiAdapter(
             (context, request), name='plone_portal_state')
