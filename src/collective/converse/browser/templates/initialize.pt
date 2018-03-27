@@ -29,12 +29,12 @@
 
     <script type="text/javascript" tal:condition="not: context/portal_membership/isAnonymousUser">
         function initialize () {
-            // Create a custom SASL Auth mechanism: SASL-HMAC
+            // Create a custom SASL Auth mechanism: SASL X-TOKEN
             var Strophe = converse.env.Strophe;
-            Strophe.SASL_HMAC = function() {};
-            Strophe.SASL_HMAC.prototype = new Strophe.SASLMechanism("HMAC", true, 60);
-            Strophe.SASL_HMAC.prototype.test = Strophe.SASLPlain.prototype.test;
-            Strophe.SASL_HMAC.prototype.onChallenge = Strophe.SASLPlain.prototype.onChallenge;
+            Strophe.SASL_X_TOKEN = function() {};
+            Strophe.SASL_X_TOKEN.prototype = new Strophe.SASLMechanism("X-TOKEN", true, 60);
+            Strophe.SASL_X_TOKEN.prototype.test = Strophe.SASLPlain.prototype.test;
+            Strophe.SASL_X_TOKEN.prototype.onChallenge = Strophe.SASLPlain.prototype.onChallenge;
 
             var chatdata = document.getElementById('collective-xmpp-chat-data');
             converse.initialize({
@@ -45,7 +45,7 @@
                 'auto_login': 'true',
                 'auto_subscribe': chatdata.getAttribute('auto_subscribe') === "True",
                 'bosh_service_url': chatdata.getAttribute('bosh_url'),
-                'connection_options': {'mechanisms': [Strophe.SASL_HMAC]},
+                'connection_options': {'mechanisms': [Strophe.SASL_X_TOKEN]},
                 'credentials_url': chatdata.getAttribute('credentials_url'),
                 'debug': chatdata.getAttribute('debug') === "True",
                 'hide_muc_server': true,

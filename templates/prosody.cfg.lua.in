@@ -81,8 +81,8 @@ modules_enabled = {
 
         "mam"; -- Message Archive Management (XEP-0313). Stores messages in a SQL DB
         "groups"; -- Shared roster support
-        "auth_hmac"; -- HMAC token-based authentication
-        "sasl_hmac"; -- Custom SASL auth mechanism
+        "auth_token"; -- HMAC token-based authentication
+        "sasl_token"; -- Custom SASL auth mechanism
 
 };
 
@@ -140,7 +140,7 @@ s2s_secure_auth = false
 -- server please see http://prosody.im/doc/modules/mod_auth_internal_hashed
 -- for information about using the hashed backend.
 
-authentication = "hmac"
+authentication = "token"
 
 -- Select the storage backend to use. By default Prosody uses flat files
 -- in its configured data directory, but it also supports more backends
