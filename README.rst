@@ -9,16 +9,50 @@ Introduction
 Installation
 ============
 
+Installing dependencies
+-----------------------
+
+Before running buildout, you'll need to install various libraries needed by Prosody::
+
+- lua5.1: The Lua 5.1 interpreter
+- liblua5.1: Lua 5.1 library
+- libssl 0.9.8 or later: OpenSSL
+- libidn11: GNU libidn library, version 1.1
+- libevent
+
+These can be installed on Debian/Ubuntu with apt-get::
+
+    sudo apt-get install lua5.1 liblua5.1-dev libidn11-dev libssl-dev luarocks libevent-dev
+
+On Mac, if you use brew::
+
+    brew install libidn libevent openssl lua51
+
+.. note:: It could happen that lua51 installs into `/usr/local/Cellar/lua@5.1`.
+    If so, then symlink it to `/usr/local/Cellar/lua51`.
+
+and if you use MacPorts::
+
+    sudo port install libidn libevent openssl lua51* luarocks*
+
+.. Note:: luarocks and lua51 need to be fixed on macports (luarocks to use
+    lua5.1 instead of the latest, and lua5.1 to use default lua CFLAGS
+    instead of overriding them).
+
+
+Running buildout
+----------------
+
 To integrate ``collective.converse`` into your own project, you'll want to
 include ``prosody.cfg`` from this repo in your bulidout config.::
 
     [buildout]
     extends = /path/to/prosody.cfg
 
-Then you'll need to create a ``secrets.cfg`` file, with the following format:
+Then you'll need to create a ``secrets.cfg`` file, with the following format::
 
     [prosody.cfg.lua]
-    # FIXME: don't use these values, they're for demonstration purposes only,
+    # TODO: don't use these values, they're for demonstration purposes only,
     # generate your own OR YOU WILL BE HACKED!
     otp_seed = XVGR73KMZH2M4XMY
     token_secret = JYXEX4IQOEYFYQ2S3MC5P4ZT4SDHYEA7
@@ -36,7 +70,7 @@ Then you'll need to create a ``secrets.cfg`` file, with the following format:
         </product-config>
 
 Don't use the secrets values in the example above, generate your own.
-Read the section `Authentication`_ below to see how to do that.
+Read the section `User Authentication`_ below to see how to do that.
 
 The ``zope-conf-additional`` additional section above lets you configure your
 XMPP settings via buildout. In the very least you'll need to provide the
@@ -55,8 +89,8 @@ don't put those value in ``secrets.cfg``.
 
 Once you've configured secrets.cfg, you can run buildout.
 
-Authentication
-==============
+User Authentication
+===================
 
 Plone generates `HMAC <https://en.wikipedia.org/wiki/HMAC>`_ tokens
 which contain time-based one-time-pin (TOTP) tokens and are hashed with SHA256.
